@@ -3,8 +3,8 @@ import '../loginForm/LoginForm.css';
 
 function LoginForm() {
     return(
-        <div>
-            <form>
+        <div className='row'>
+            <form className='col s10'>
                 <span>
                     <input placeholder='Username' id='username'/>
                     <label htmlFor='username'>Username</label>
@@ -12,8 +12,11 @@ function LoginForm() {
                     <label htmlFor='password'>Password</label>
                 </span>
 
-                <span className='submitBtn'>
+                <div className='submitBtn'>
                     <button type='submit' className='btn'>Submit</button>
+                </div>
+                <span>
+                    <p>Not registered? Sign up <a href='#'>here</a></p>
                 </span>
             </form>
         </div>

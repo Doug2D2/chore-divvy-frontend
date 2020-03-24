@@ -7,7 +7,11 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <LoginForm />
+      <div className='row'>
+      <span className='loginStyle col s6'>
+        <LoginForm />
+      </span>
+      </div>
     </div>
   );
 }
