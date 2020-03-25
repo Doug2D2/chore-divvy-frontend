@@ -1,3 +1,16 @@
 .submitBtn {
     margin-top: 10px;
 }
+
+.formContainer {
+    display: flex; 
+    justify-content: center;
+}
+
+form {
+    background-color: #fafafa;
+    padding: 90px;
+    width: 600px;
+    border-radius: 5px;
+}
+

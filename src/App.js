@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <Header />
       <div className='row'>
-      <span className='loginStyle col s6'>
+      <span className='loginStyle'>
         <LoginForm />
       </span>
       </div>

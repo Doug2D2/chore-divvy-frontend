@@ -4,21 +4,24 @@ import '../loginForm/LoginForm.css';
 function LoginForm() {
     return(
         <div className='row'>
-            <form className='col s10'>
-                <span>
-                    <input placeholder='Username' id='username'/>
-                    <label htmlFor='username'>Username</label>
-                    <input placeholder='Password' id='password'/>
-                    <label htmlFor='password'>Password</label>
-                </span>
+            <h1>Login</h1>
+            <span className='formContainer'>
+                <form>
+                    <span>
+                        <input placeholder='Username' id='username'/>
+                        <label htmlFor='username'>Username</label>
+                        <input placeholder='Password' id='password'/>
+                        <label htmlFor='password'>Password</label>
+                    </span>
 
-                <div className='submitBtn'>
-                    <button type='submit' className='btn'>Submit</button>
-                </div>
-                <span>
+                    <div className='submitBtn'>
+                        <button type='submit' className='btn indigo'>Submit</button>
+                    </div>
+
                     <p>Not registered? Sign up <a href='#'>here</a></p>
-                </span>
-            </form>
+
+                </form>
+            </span>
         </div>
     )
 }
