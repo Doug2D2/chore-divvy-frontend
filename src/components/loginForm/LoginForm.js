@@ -8,14 +8,14 @@ function LoginForm() {
             <span className='formContainer'>
                 <form>
                     <span>
-                        <input placeholder='Username' id='username'/>
+                        <input placeholder='Username' id='username' className='inputStyle'/>
                         <label htmlFor='username'>Username</label>
-                        <input placeholder='Password' id='password'/>
+                        <input placeholder='Password' id='password' className='inputStyle'/>
                         <label htmlFor='password'>Password</label>
                     </span>
 
                     <div className='submitBtn'>
-                        <button type='submit' className='btn indigo'>Submit</button>
+                        <button type='submit' className='btn btn-large indigo'>Submit</button>
                     </div>
 
                     <p>Not registered? Sign up <a href='#'>here</a></p>
