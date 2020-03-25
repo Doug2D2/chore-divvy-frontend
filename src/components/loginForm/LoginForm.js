@@ -1,29 +1,38 @@
-import React from 'react';
+import  React,{ Component } from 'react';
 import '../loginForm/LoginForm.css';
+import { Link } from 'react-router-dom';
 
-function LoginForm() {
-    return(
-        <div className='row'>
-            <h2>Login</h2>
-            <span className='formContainer'>
-                <form>
-                    <span>
-                        <input placeholder='Username' id='username' className='inputStyle'/>
-                        <label htmlFor='username'>Username</label>
-                        <input placeholder='Password' id='password' className='inputStyle'/>
-                        <label htmlFor='password'>Password</label>
-                    </span>
+class LoginForm extends Component {
 
-                    <div className='submitBtn'>
-                        <button type='submit' className='btn btn-large indigo'>Submit</button>
-                    </div>
+    render() {
+        return(
+            <div className='row'>
+                <h2>Login</h2>
+                <span className='formContainer'>
+                    <form>
+                        <span>
+                            <input placeholder='Username' id='username' className='inputStyle'/>
+                            <label htmlFor='username'>Username</label>
+                            <input placeholder='Password' id='password' className='inputStyle'/>
+                            <label htmlFor='password'>Password</label>
+                        </span>
 
-                    <p>Not registered? Sign up <a href='#'>here</a></p>
+                            <div className='submitBtn'>
+                                <Link to='/dashboard'>
+                                    <button type='submit' className='btn btn-large indigo'>Submit</button>
+                                </Link>
+                            </div>
 
-                </form>
-            </span>
-        </div>
-    )
+                            <p>Not registered? Sign up
+                                <Link to='/sign-up-form'>
+                                    here
+                                </Link>
+                            </p>
+                    </form>
+                </span>
+            </div>
+        )
+    }
 }
 
 export default LoginForm;
