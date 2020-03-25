@@ -9,8 +9,14 @@
 
 form {
     background-color: #fafafa;
-    padding: 90px;
+    padding: 45px;
     width: 600px;
     border-radius: 5px;
+}
+
+h2 {
+    margin-top: 70px;
+    color: white;
+    font-family: 'Coiny', cursive;
 }
 

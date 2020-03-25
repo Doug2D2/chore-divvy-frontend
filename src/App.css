@@ -1,7 +1,15 @@
 .App {
   text-align: center;
-  background-color: #5ddef4;
   margin: 0px;
+}
+
+body {
+  background-color: #5ddef4;
+}
+
+h1 {
+  color: white;
+  font-family: 'Coiny', cursive;
 }
 
 

@@ -4,7 +4,7 @@ import '../loginForm/LoginForm.css';
 function LoginForm() {
     return(
         <div className='row'>
-            <h1>Login</h1>
+            <h2>Login</h2>
             <span className='formContainer'>
                 <form>
                     <span>
