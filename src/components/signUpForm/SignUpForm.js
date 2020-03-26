@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-function SignUpForm() {
-    return(
-        <div>
-            <h1>Sign Up Form working</h1>
-        </div>
-    )
+class SignUpForm extends Component {
+
+    render() {
+        return(
+            <div>
+                <h1>Sign Up Form working</h1>
+            </div>
+        )
+    }
 }
 
 export default SignUpForm;
