@@ -1,16 +1,18 @@
 import  React, { Component } from 'react';
 import '../loginForm/LoginForm.css';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 class LoginForm extends Component {
     state = {
         isLoggedIn: false,
-        loginCredentials: {},
-        usernameInput: "",
-        passwordInput: ""
+        usernameInput: '',
+        passwordInput: '',
+        redirect: false
     }
 
-    handleSubmitLoginForm(username, password) {
+    handleSubmitLoginForm(e, username, password) {
+        e.preventDefault();
+
         fetch('http://localhost:8080/login', {
             method: 'POST',
             headers: {
@@ -22,10 +24,23 @@ class LoginForm extends Component {
             })
         })
         .then(res => {
-            console.log(res);
+            if(res.status > 399) {
+                console.log('if statement');
+                this.setState({
+                    usernameInput: '',
+                    passwordInput: ''
+                });
+            } else {
+                console.log('in else');
+                this.setState({ 
+                    isLoggedIn: true, 
+                    redirect: true 
+                });
+            }
         })
-        .catch(err => console.log(err));
-
+        .catch(err => {
+            console.log(err)
+        });
     }
 
     handleUsernameChange = (event) => {
@@ -37,6 +52,10 @@ class LoginForm extends Component {
     }
 
     render() {
+        if(this.state.redirect) {
+            return <Redirect push to='/dashboard' />
+        }
+
         return(
             <div className='row'>
                 <h2>Login</h2>
@@ -55,18 +74,16 @@ class LoginForm extends Component {
                             <label htmlFor='password'>Password</label>
                         </span>
 
-                            <div className='submitBtn'>
-                                <Link to='/dashboard'>
-                                    <button type='submit' className='btn btn-large indigo' 
-                                    onClick={() => this.handleSubmitLoginForm(this.state.usernameInput, this.state.passwordInput)}>
-                                        Submit
-                                    </button>
-                                </Link>
-                            </div>
+                        <div className='submitBtn'>
+                            <button type='submit' className='btn btn-large indigo' 
+                                onClick={(e) => this.handleSubmitLoginForm(e, this.state.usernameInput, this.state.passwordInput)}>
+                                Submit
+                            </button>
+                        </div>
 
                             <p>Not registered? Sign up
                                 <Link to='/sign-up-form'>
-                                    here
+                                    &nbsp;here
                                 </Link>
                             </p>
                     </form>
