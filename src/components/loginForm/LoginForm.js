@@ -7,11 +7,13 @@ class LoginForm extends Component {
         isLoggedIn: false,
         usernameInput: '',
         passwordInput: '',
-        redirect: false
+        redirect: false,
+        loginErrorMsg: ''
     }
 
     handleSubmitLoginForm(e, username, password) {
         e.preventDefault();
+
 
         fetch('http://localhost:8080/login', {
             method: 'POST',
@@ -25,13 +27,12 @@ class LoginForm extends Component {
         })
         .then(res => {
             if(res.status > 399) {
-                console.log('if statement');
                 this.setState({
                     usernameInput: '',
-                    passwordInput: ''
+                    passwordInput: '',
+                    loginErrorMsg: 'The username or password entered is incorrect. Please try again.'
                 });
             } else {
-                console.log('in else');
                 this.setState({ 
                     isLoggedIn: true, 
                     redirect: true 
@@ -39,7 +40,7 @@ class LoginForm extends Component {
             }
         })
         .catch(err => {
-            console.log(err)
+            this.setState({ loginErrorMsg: 'Server Error '});
         });
     }
 
@@ -56,18 +57,24 @@ class LoginForm extends Component {
             return <Redirect push to='/dashboard' />
         }
 
+        const enabled = this.state.usernameInput.length > 0 && this.state.passwordInput.length > 0;
+    
+
         return(
             <div className='row'>
                 <h2>Login</h2>
                 <span className='formContainer'>
                     <form>
                         <span>
+                            <p className='loginErrorMsg'>{this.state.loginErrorMsg}</p>
+                        </span>
+                        <span>
                             <input placeholder='Username' id='username' className='inputStyle' 
                             value={this.state.usernameInput}
                             onChange={this.handleUsernameChange} 
                             />
                             <label htmlFor='username'>Username</label>
-                            <input placeholder='Password' id='password' className='inputStyle' 
+                            <input placeholder='Password' type='password' id='password' className='inputStyle' 
                             value={this.state.passwordInput}
                             onChange={this.handlePasswordChange}
                             />
@@ -75,7 +82,7 @@ class LoginForm extends Component {
                         </span>
 
                         <div className='submitBtn'>
-                            <button type='submit' className='btn btn-large indigo' 
+                            <button type='submit' className='btn btn-large indigo' disabled={!enabled}
                                 onClick={(e) => this.handleSubmitLoginForm(e, this.state.usernameInput, this.state.passwordInput)}>
                                 Submit
                             </button>
