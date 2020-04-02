@@ -4,8 +4,20 @@ class SignUpForm extends Component {
 
     render() {
         return(
-            <div>
-                <h1>Sign Up Form working</h1>
+            <div className='row'>
+                <span className='formContainer'>
+                    <form>
+                        <input placeholder='Username' id='username' className='inputStyle'/>
+                        <input placeholder='Password' id='password' className='inputStyle'/>
+                        <input placeholder='Confirm Password' id='confirmPassword' className='inputStyle'/>
+                        <input placeholder='First Name' id='firstName' className='inputStyle'/>
+                        <input placeholder='Last Name' id='lastName' className='inputStyle'/>
+
+                        <div>
+                            <button type='submit' className='btn btn-large indigo'>Sign up</button>
+                        </div>
+                    </form>
+                </span>
             </div>
         )
     }

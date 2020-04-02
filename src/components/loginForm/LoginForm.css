@@ -2,34 +2,10 @@
     margin-top: 10px;
 }
 
-.formContainer {
-    display: flex; 
-    justify-content: center;
-}
-
-form {
-    background-color: #fafafa;
-    padding: 45px;
-    width: 500px;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
 h2 {
     margin-top: 70px;
     color: white;
     font-family: 'Coiny', cursive;
-}
-
-.inputStyle {
-    background-color: white !important;
-    border-radius: 5px !important;
-    padding: 5px !important;
-    border: none !important;
-}
-
-.inputStyle:focus {
-    border: none !important;
 }
 
 .loginErrorMsg {
