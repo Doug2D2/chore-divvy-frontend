@@ -3,5 +3,15 @@
 }
 
 label {
-    text-align: left !important;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.signUp {
+    margin-top: 10px;
+    color: #3f51b5;
+}
+
+.inputStyle {
+    margin-top: 10px;
 }

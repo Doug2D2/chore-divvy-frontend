@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../signUpForm/SignUpForm.css';
+import { Redirect } from 'react-router-dom';
 
 class SignUpForm extends Component {
     state = {
@@ -52,11 +53,15 @@ class SignUpForm extends Component {
     }
 
     handlePasswordChange = (event) => {
-        this.setState({ passwordInput: event.target.value });
+        this.setState({ 
+            passwordInput: event.target.value
+        });
     }
 
     handleConfirmPasswordChange = (event) => {
-        this.setState({ confirmPasswordInput: event.target.value });
+        this.setState({ 
+            confirmPasswordInput: event.target.value   
+        });
     }
 
     handleFirstNameChange = (event) => {
@@ -72,48 +77,55 @@ class SignUpForm extends Component {
             && this.state.usernameInput.length > 0 && this.state.passwordInput.length > 0 
             && this.state.confirmPasswordInput.length > 0;
 
+            if(this.state.redirect) {
+                return <Redirect push to='/dashboard' />
+            }
+
         return(
             <div className='row'>
-
-                <h2>Sign Up</h2>
 
                 <span className='formContainer'>
                     <form>
                         <span>
-                            <p className='errorMessage'>{this.state.errorMessage}</p>
+                            <h2 className='signUp'>Sign Up</h2>
                         </span>
 
-                        <label htmlFor='firstName'>First Name</label>
-                        <input placeholder='First Name' id='firstName' className='inputStyle' 
+                        <span>
+                            <p className='errorMessage'>{this.state.errorMessage}</p>
+                        </span>
+                        
+                        <input placeholder='First Name' id='firstName' className='inputStyle' name='firstName'
                         value={this.state.firstNameInput}
                         onChange={this.handleFirstNameChange}
                         />
-                        <label htmlFor='lastName'>Last Name</label>
+                        <label htmlFor='firstName' >First Name</label>
                         <input placeholder='Last Name' id='lastName' className='inputStyle'
                         value={this.state.lastNameInput}
                         onChange={this.handleLastNameChange}
                         />
-                        <label htmlFor='username'>Email</label>
+                        <label htmlFor='lastName'>Last Name</label>
                         <input placeholder='Email' id='username' className='inputStyle'
                         value={this.state.usernameInput}
                         onChange={this.handleUsernameChange}
                         />
-                        <label htmlFor='password'>Password</label>
+                        <label htmlFor='username'>Email</label>
                         <input placeholder='Password' id='password' className='inputStyle' type='password'
                         value={this.state.passwordInput}
                         onChange={this.handlePasswordChange}
                         />
-                        <label htmlFor='confirmPassword'>Confirm Password</label>
+                        <label htmlFor='password'>Password</label>
                         <input placeholder='Confirm Password' id='confirmPassword' className='inputStyle' type='password'
                         value={this.state.confirmPasswordInput}
                         onChange={this.handleConfirmPasswordChange}
                         />
+                        <label htmlFor='confirmPassword'>Confirm Password</label>
 
                         <div>
                             <br/>
                             <button type='submit' className='btn btn-large indigo' disabled={!enabled}
-                            onClick={(e) => this.handleSubmitSignupForm(e, this.state.usernameInput, this.state.passwordInput, this.state.confirmPasswordInput, this.state.firstNameInput, this.state.lastNameInput )}
-                            >Sign up</button>
+                            onClick={(e) => this.handleSubmitSignupForm(e, this.state.usernameInput, this.state.passwordInput, this.state.confirmPasswordInput, this.state.firstNameInput, this.state.lastNameInput )}>
+                                Sign up
+                            </button>
                         </div>
                     </form>
                 </span>
