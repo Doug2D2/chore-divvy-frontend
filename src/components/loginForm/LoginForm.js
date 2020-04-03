@@ -14,7 +14,6 @@ class LoginForm extends Component {
     handleSubmitLoginForm(e, username, password) {
         e.preventDefault();
 
-
         fetch('http://localhost:8080/login', {
             method: 'POST',
             headers: {
@@ -69,16 +68,16 @@ class LoginForm extends Component {
                             <p className='loginErrorMsg'>{this.state.loginErrorMsg}</p>
                         </span>
                         <span>
-                            <input placeholder='Username' id='username' className='inputStyle' 
+                            <label htmlFor='username'>Email</label>
+                            <input placeholder='Email' id='username' className='inputStyle' 
                             value={this.state.usernameInput}
                             onChange={this.handleUsernameChange} 
                             />
-                            <label htmlFor='username'>Username</label>
+                            <label htmlFor='password'>Password</label>
                             <input placeholder='Password' type='password' id='password' className='inputStyle' 
                             value={this.state.passwordInput}
                             onChange={this.handlePasswordChange}
                             />
-                            <label htmlFor='password'>Password</label>
                         </span>
 
                         <div className='submitBtn'>
