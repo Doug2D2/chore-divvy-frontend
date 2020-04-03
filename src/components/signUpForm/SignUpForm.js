@@ -44,32 +44,10 @@ class SignUpForm extends Component {
         } else {
             this.setState({ errorMessage: 'Password doesn\'t match' })
         }
-
-        
     }
 
-    handleUsernameChange = (event) => {
-        this.setState({ usernameInput: event.target.value });
-    }
-
-    handlePasswordChange = (event) => {
-        this.setState({ 
-            passwordInput: event.target.value
-        });
-    }
-
-    handleConfirmPasswordChange = (event) => {
-        this.setState({ 
-            confirmPasswordInput: event.target.value   
-        });
-    }
-
-    handleFirstNameChange = (event) => {
-        this.setState({ firstNameInput: event.target.value });
-    }
-
-    handleLastNameChange = (event) => {
-        this.setState({ lastNameInput: event.target.value });
+    handleInputChange = (event) => {
+        this.setState({ [event.target.id]: event.target.value })
     }
 
     render() {
@@ -94,29 +72,29 @@ class SignUpForm extends Component {
                             <p className='errorMessage'>{this.state.errorMessage}</p>
                         </span>
                         
-                        <input placeholder='First Name' id='firstName' className='inputStyle' name='firstName'
+                        <input placeholder='First Name' id='firstNameInput' className='inputStyle' name='firstName'
                         value={this.state.firstNameInput}
-                        onChange={this.handleFirstNameChange}
+                        onChange={this.handleInputChange}
                         />
                         <label htmlFor='firstName' >First Name</label>
-                        <input placeholder='Last Name' id='lastName' className='inputStyle'
+                        <input placeholder='Last Name' id='lastNameInput' className='inputStyle'
                         value={this.state.lastNameInput}
-                        onChange={this.handleLastNameChange}
+                        onChange={this.handleInputChange}
                         />
                         <label htmlFor='lastName'>Last Name</label>
-                        <input placeholder='Email' id='username' className='inputStyle'
+                        <input placeholder='Email' id='usernameInput' className='inputStyle'
                         value={this.state.usernameInput}
-                        onChange={this.handleUsernameChange}
+                        onChange={this.handleInputChange}
                         />
                         <label htmlFor='username'>Email</label>
-                        <input placeholder='Password' id='password' className='inputStyle' type='password'
+                        <input placeholder='Password' id='passwordInput' className='inputStyle' type='password'
                         value={this.state.passwordInput}
-                        onChange={this.handlePasswordChange}
+                        onChange={this.handleInputChange}
                         />
                         <label htmlFor='password'>Password</label>
-                        <input placeholder='Confirm Password' id='confirmPassword' className='inputStyle' type='password'
+                        <input placeholder='Confirm Password' id='confirmPasswordInput' className='inputStyle' type='password'
                         value={this.state.confirmPasswordInput}
-                        onChange={this.handleConfirmPasswordChange}
+                        onChange={this.handleInputChange}
                         />
                         <label htmlFor='confirmPassword'>Confirm Password</label>
 
