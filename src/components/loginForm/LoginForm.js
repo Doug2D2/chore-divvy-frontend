@@ -1,6 +1,7 @@
 import  React, { Component } from 'react';
 import '../loginForm/LoginForm.css';
 import { Link, Redirect } from 'react-router-dom';
+const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class LoginForm extends Component {
     state = {
@@ -14,8 +15,8 @@ class LoginForm extends Component {
     handleSubmitLoginForm(e, username, password) {
         e.preventDefault();
 
-
-        fetch('http://localhost:8080/login', {
+        console.log('baseUrl: ' + baseUrl)
+        fetch(`${baseUrl}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
