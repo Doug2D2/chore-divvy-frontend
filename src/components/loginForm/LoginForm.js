@@ -70,11 +70,11 @@ class LoginForm extends Component {
                             <p className='loginErrorMsg'>{this.state.loginErrorMsg}</p>
                         </span>
                         <span>
-                            <input placeholder='Username' id='username' className='inputStyle' 
+                            <input placeholder='Email' id='username' className='inputStyle' 
                             value={this.state.usernameInput}
                             onChange={this.handleUsernameChange} 
                             />
-                            <label htmlFor='username'>Username</label>
+                            <label htmlFor='username'>Email</label>
                             <input placeholder='Password' type='password' id='password' className='inputStyle' 
                             value={this.state.passwordInput}
                             onChange={this.handlePasswordChange}
