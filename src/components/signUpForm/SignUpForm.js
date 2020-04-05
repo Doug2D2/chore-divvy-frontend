@@ -34,8 +34,7 @@ class SignUpForm extends Component {
                 console.log(res);
                 if(res.status === 401) {
                     this.setState({ 
-                        errorMessage: `Account with email ${this.state.usernameInput} already exists`,
-                        // redirect: false 
+                        errorMessage: `Account with email ${this.state.usernameInput} already exists`
                     })
                 } else {
                     this.setState({
