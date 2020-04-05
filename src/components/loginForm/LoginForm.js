@@ -15,7 +15,6 @@ class LoginForm extends Component {
     handleSubmitLoginForm(e, username, password) {
         e.preventDefault();
 
-        console.log('baseUrl: ' + baseUrl)
         fetch(`${baseUrl}/login`, {
             method: 'POST',
             headers: {
