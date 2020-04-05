@@ -30,13 +30,20 @@ class SignUpForm extends Component {
                     lastName: lastName
                 })
             })
-            .then(data => {
-                console.log(data);
-                this.setState({
-                    isLoggedIn: true,
-                    redirect: true,
-                    errorMessage: ''
-                })
+            .then(res => {
+                console.log(res);
+                if(res.status === 401) {
+                    this.setState({ 
+                        errorMessage: `Account with email ${this.state.usernameInput} already exists`,
+                        // redirect: false 
+                    })
+                } else {
+                    this.setState({
+                        isLoggedIn: true,
+                        redirect: true,
+                        errorMessage: ''
+                    })
+                }
             })
             .catch((err) => {
                 this.setState({ errorMessage: 'Server Error'})
