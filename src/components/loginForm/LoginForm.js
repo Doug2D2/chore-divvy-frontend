@@ -81,7 +81,7 @@ class LoginForm extends Component {
                             <label htmlFor='password'>Password</label>
                         </span>
 
-                        <p className='forgotPW'><Link>Forgot Password?</Link></p>
+                        <p className='forgotPW'><Link to='/forgot-password'>Forgot Password?</Link></p>
 
                         <div className='submitBtn'>
                             <button type='submit' className='btn btn-large indigo' disabled={!enabled}
