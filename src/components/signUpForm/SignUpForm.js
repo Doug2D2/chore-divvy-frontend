@@ -37,6 +37,10 @@ class SignUpForm extends Component {
                     this.setState({ 
                         errorMessage: `Account with email ${this.state.usernameInput} already exists`
                     })
+                } else if(res.status === 400) {
+                    this.setState({
+                        errorMessage: `Password must be at least 8 characters`
+                    })
                 } else {
                     this.setState({
                         isLoggedIn: true,
