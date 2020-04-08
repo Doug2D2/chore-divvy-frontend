@@ -5,6 +5,8 @@ import LoginForm from './components/loginForm/LoginForm';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Dashboard from './components/dashboard/Dashboard';
 import SignUpForm from './components/signUpForm/SignUpForm';
+import ForgotPassword from './components/forgotPassword/ForgotPassword';
+import SuccessPassword from './components/forgotPassword/successPassword/SuccessPassword';
 
 class App extends Component {
   render() {
@@ -16,6 +18,8 @@ class App extends Component {
             <Route path='/' exact component={LoginForm}/>
             <Route path='/dashboard' component={Dashboard}/>
             <Route path='/sign-up-form' component={SignUpForm}/>
+            <Route path='/forgot-password' component={ForgotPassword}/>
+            <Route path='/success-password' component={SuccessPassword}/>
           </Switch>
         </Router>
       </div>

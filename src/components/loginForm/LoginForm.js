@@ -40,7 +40,7 @@ class LoginForm extends Component {
             }
         })
         .catch(err => {
-            this.setState({ loginErrorMsg: 'Server Error '});
+            this.setState({ loginErrorMsg: 'Server Error' });
         });
     }
 
@@ -80,6 +80,8 @@ class LoginForm extends Component {
                             />
                             <label htmlFor='password'>Password</label>
                         </span>
+
+                        <p className='forgotPW'><Link to='/forgot-password'>Forgot Password?</Link></p>
 
                         <div className='submitBtn'>
                             <button type='submit' className='btn btn-large indigo' disabled={!enabled}
