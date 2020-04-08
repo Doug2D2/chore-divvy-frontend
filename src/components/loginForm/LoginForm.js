@@ -40,7 +40,7 @@ class LoginForm extends Component {
             }
         })
         .catch(err => {
-            this.setState({ loginErrorMsg: 'Server Error '});
+            this.setState({ loginErrorMsg: 'Server Error' });
         });
     }
 
