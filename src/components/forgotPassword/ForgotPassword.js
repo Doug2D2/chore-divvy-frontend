@@ -13,29 +13,36 @@ class ForgotPassword extends Component {
     handleResetChange(e, username) {
         e.preventDefault();
 
-        fetch(`${baseUrl}/forgot-password`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: username
+        const emailFormatRegEx = /\S+@\S+/;
+        let isEmailAddressValid = emailFormatRegEx.test(username);
+
+        if(isEmailAddressValid) {
+            fetch(`${baseUrl}/forgot-password`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username
+                })
             })
-        })
-        .then(res => {
-            if(res.status === 400) {
-                this.setState({ 
-                    errMessage: `Username ${username} doesn't exist.`
-                 });
-            } else {
-                this.setState({ 
-                    redirect: true 
-                });
-            }
-        })
-        .catch(err => {
-            this.setState({ errMessage: 'Server Error' });
-        })
+            .then(res => {
+                if(res.status === 400) {
+                    this.setState({ 
+                        errMessage: `Username ${username} doesn't exist.`
+                     });
+                } else {
+                    this.setState({ 
+                        redirect: true 
+                    });
+                }
+            })
+            .catch(err => {
+                this.setState({ errMessage: 'Server Error' });
+            })
+        } else {
+            this.setState({ errMessage: 'Invalid email address' });
+        }
     }
 
     handleUsernameChange = (e) => {
