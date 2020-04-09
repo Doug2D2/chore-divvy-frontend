@@ -18,43 +18,51 @@ class SignUpForm extends Component {
     handleSubmitSignupForm = (event, username, password, confirmPassword, firstName, lastName) => {
         event.preventDefault();
 
-        if (password === confirmPassword) {
-            if(password.length <= 8) {
-                fetch(`${baseUrl}/sign-up`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        username: username,
-                        password: password,
-                        firstName: firstName,
-                        lastName: lastName
+        const emailFormatRegEx = /\S+@\S+/;
+        let isEmailAddressValid = emailFormatRegEx.test(username);
+
+        if(isEmailAddressValid) {
+            if (password === confirmPassword) {
+                if(password.length <= 8) {
+                    fetch(`${baseUrl}/sign-up`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username: username,
+                            password: password,
+                            firstName: firstName,
+                            lastName: lastName
+                        })
                     })
-                })
-                .then(res => {
-                    console.log(res);
-                    if(res.status === 401) {
-                        this.setState({ 
-                            errorMessage: `Account with email ${this.state.usernameInput} already exists`
-                        })
-                    } else {
-                        this.setState({
-                            isLoggedIn: true,
-                            redirect: true,
-                            errorMessage: ''
-                        })
-                    }
-                })
-                .catch((err) => {
-                    this.setState({ errorMessage: 'Server Error'})
-                })
+                    .then(res => {
+                        console.log(res);
+                        if(res.status === 401) {
+                            this.setState({ 
+                                errorMessage: `Account with email ${this.state.usernameInput} already exists`
+                            })
+                        } else {
+                            this.setState({
+                                isLoggedIn: true,
+                                redirect: true,
+                                errorMessage: ''
+                            })
+                        }
+                    })
+                    .catch((err) => {
+                        this.setState({ errorMessage: 'Server Error'})
+                    })
+                } else {
+                    this.setState({ errorMessage: 'Password must be at least 8 characters long' });
+                }
             } else {
-                this.setState({ errorMessage: 'Password must be at least 8 characters long' });
+                this.setState({ errorMessage: 'Password doesn\'t match' })
             }
         } else {
-            this.setState({ errorMessage: 'Password doesn\'t match' })
+            this.setState({ errorMessage: 'Invalid email address' });
         }
+
     }
 
     handleInputChange = (event) => {
@@ -93,7 +101,7 @@ class SignUpForm extends Component {
                         onChange={this.handleInputChange}
                         />
                         <label htmlFor='lastName'>Last Name</label>
-                        <input placeholder='Email' id='usernameInput' className='inputStyle'
+                        <input type='email' placeholder='Email' id='usernameInput' className='inputStyle'
                         value={this.state.usernameInput}
                         onChange={this.handleInputChange}
                         />
