@@ -43,7 +43,6 @@ class ForgotPassword extends Component {
         } else {
             this.setState({ errMessage: 'Invalid email address' });
         }
-
     }
 
     handleUsernameChange = (e) => {

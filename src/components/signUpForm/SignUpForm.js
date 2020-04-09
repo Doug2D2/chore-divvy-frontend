@@ -23,7 +23,7 @@ class SignUpForm extends Component {
 
         if(isEmailAddressValid) {
             if (password === confirmPassword) {
-                if(password.length <= 8) {
+                if(password.length >= 8) {
                     fetch(`${baseUrl}/sign-up`, {
                         method: 'POST',
                         headers: {
