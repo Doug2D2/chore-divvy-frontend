@@ -1,0 +1,46 @@
+.logoDiv {
+    display: flex;
+    border-radius: 5px;
+    position: relative;
+    justify-content: center;
+}
+
+.logoSpan {
+    display: flex;
+    background-color: #757de8;
+    background-image: linear-gradient(326deg, #757de8 0%, #002984 74%); 
+    width: 70%;
+    border-radius: 5px;
+    justify-content: center;
+    position: absolute;
+    z-index: -1;
+    height: 753px;
+    margin-top: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    flex-direction: column;
+}
+
+.signUpContainer {
+    display: flex;
+    justify-content: right;
+    margin-right: 450px;
+}
+
+.logoImg {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    margin-left: 200px;
+    width: 20%;
+    height: 35%;
+    border-radius: 50%;
+}
+
+.signUpInfo {
+    width: 630px;
+    display: flex;
+    justify-content: left;
+    margin-left: 10px;
+    padding: 50px;
+    color: #fafafa;
+}
