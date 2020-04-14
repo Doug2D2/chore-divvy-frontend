@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../signUpForm/SignUpForm.css';
-import { Redirect } from 'react-router-dom';
+import BigLogo from '../bigLogo/BigLogo';
+import { Link, Redirect } from 'react-router-dom';
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class SignUpForm extends Component {
@@ -81,7 +82,14 @@ class SignUpForm extends Component {
         return(
             <div className='row'>
 
-                <span className='formContainer'>
+                < BigLogo />
+
+                <span className='formContainer signUpContainer'>
+
+                    <Link to='/' className='signUpClose'>
+                        <i className="small material-icons signUpClose">close</i>
+                    </Link>
+
                     <form>
                         <span>
                             <h2 className='signUp'>Sign Up</h2>
