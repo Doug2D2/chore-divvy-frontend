@@ -11,7 +11,6 @@
     background-image: linear-gradient(326deg, #757de8 0%, #002984 74%); 
     width: 70%;
     border-radius: 5px;
-    justify-content: center;
     position: absolute;
     z-index: -1;
     height: 753px;
@@ -29,7 +28,7 @@
 .logoImg {
     display: flex;
     justify-content: center;
-    margin-top: 50px;
+    margin-top: 100px;
     margin-left: 200px;
     width: 20%;
     height: 35%;
@@ -43,4 +42,12 @@
     margin-left: 10px;
     padding: 50px;
     color: #fafafa;
+}
+
+.signUpClose {
+    color: #002984;
+    height: 30px;
+   display: flex;
+    justify-content: right;
+    position: absolute;
 }
