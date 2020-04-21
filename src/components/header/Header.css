@@ -1,0 +1,15 @@
+.brand-logo {
+    color: white;
+    font-family: 'Coiny', cursive;
+}
+
+.brand-logo-title {
+    margin-top: 3px;
+    font-size: 65px;
+}
+
+.nav-wrapper {
+    margin-bottom: 35px;
+    background-color: #3f51b5;
+    background-image: linear-gradient(326deg,#002984 0%, #3f51b5 74%); 
+}

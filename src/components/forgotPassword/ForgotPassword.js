@@ -55,10 +55,10 @@ class ForgotPassword extends Component {
         }
 
         return (
-            <div className='row'>
-                <span className='formContainer'>
+            <div>
+                <span className='formContainer forgotPwForm'>
                     <form>
-                        <h5 className='forgotPwText'>Forgot Password?</h5>
+                        <h4 className='forgotPwTitle'>Forgot Password?</h4>
                         <p className='forgotPwText'>Enter your email and we'll send you your new password.</p>
                         <br/>
                         <p className='forgotPwErrorMsg'>{this.state.errMessage}</p>

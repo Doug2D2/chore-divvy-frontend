@@ -62,9 +62,10 @@ class LoginForm extends Component {
 
         return(
             <div className='row'>
-                <h2>Login</h2>
-                <span className='formContainer'>
+                
+                <span className='formContainer loginContainer'>
                     <form>
+                        <h2>Login</h2>
                         <span>
                             <p className='loginErrorMsg'>{this.state.loginErrorMsg}</p>
                         </span>
