@@ -7,21 +7,24 @@ class SideMenuBar extends Component {
         categories: []
     }
 
+    componentDidMount() {
+        this.user = JSON.parse(localStorage.getItem('user'));
+        this.getCategories();
+    }
+
     getCategories() {
-        fetch(`${baseUrl}/get-categories-by-userId/1`)
+        console.log('fetch', this.user.userId);
+        fetch(`${baseUrl}/get-categories-by-userId/${this.user.userId}`)
             .then(res => {
                 return res.json();
             })
             .then(data => {
                 this.setState({ categories: data })
+                //console.log(this.state.categories);
             })
             .catch(err => {
                 console.log(err);
             })
-    }
-
-    componentDidMount() {
-        this.getCategories();
     }
 
     render() {
