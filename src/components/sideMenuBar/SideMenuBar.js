@@ -20,7 +20,6 @@ class SideMenuBar extends Component {
             })
             .then(data => {
                 this.setState({ categories: data })
-                //console.log(this.state.categories);
             })
             .catch(err => {
                 console.log(err);
