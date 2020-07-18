@@ -8,8 +8,16 @@ class LoginForm extends Component {
         isLoggedIn: false,
         usernameInput: '',
         passwordInput: '',
-        redirect: false,
         loginErrorMsg: ''
+    }
+
+    componentDidMount() {
+        this.user = localStorage.getItem('user');
+        if(this.user) {
+            this.setState({
+                isLoggedIn: true
+            });
+        }
     }
 
     handleSubmitLoginForm(e, username, password) {
@@ -39,8 +47,7 @@ class LoginForm extends Component {
         .then(data => {
             localStorage.setItem('user', JSON.stringify({ firstName: data.first_name, userId: data.id }));
             this.setState({ 
-                isLoggedIn: true, 
-                redirect: true
+                isLoggedIn: true
             });
         })
         .catch(err => {
@@ -57,7 +64,7 @@ class LoginForm extends Component {
     }
 
     render() {
-        if(this.state.redirect) {
+        if(this.state.isLoggedIn) {
             return <Redirect push to='/dashboard' />
         }
 
