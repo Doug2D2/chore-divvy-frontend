@@ -33,11 +33,15 @@ class LoginForm extends Component {
                     loginErrorMsg: 'The username or password entered is incorrect. Please try again.'
                 });
             } else {
-                this.setState({ 
-                    isLoggedIn: true, 
-                    redirect: true 
-                });
+                return res.json();
             }
+        })
+        .then(data => {
+            localStorage.setItem('user', JSON.stringify({ firstName: data.first_name, userId: data.id }));
+            this.setState({ 
+                isLoggedIn: true, 
+                redirect: true
+            });
         })
         .catch(err => {
             this.setState({ loginErrorMsg: 'Server Error' });
