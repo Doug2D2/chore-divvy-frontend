@@ -1,7 +1,7 @@
 import React from 'react';
 import '../bigLogo/BigLogo.css';
-import Logo from '../../public/Logo/logo.jpg';
-import { Link } from 'react-router-dom';
+// import Logo from '../../public/Logo/logo.jpg';
+// import { Link } from 'react-router-dom';
 
 function BigLogo() {
     return(
@@ -11,7 +11,7 @@ function BigLogo() {
                     {/* <Link to='/'>
                         <i className="small material-icons signUpClose">close</i>
                     </Link> */}
-                    <img src={Logo} className='logoImg'></img>
+                    {/* <img src={Logo} className='logoImg'></img> */}
                     <p className='signUpInfo'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
                         sed do eiusmod tempor incididunt ut 
                         labore et dolore magna aliqua. 

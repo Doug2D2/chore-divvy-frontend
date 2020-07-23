@@ -25,6 +25,10 @@ class Dashboard extends Component {
                 return res.json();
             })
             .then(data => {
+                this.categoryId = localStorage.getItem('categoryId');
+                if(!this.categoryId) {
+                    localStorage.setItem('categoryId', data[0].id)
+                }
                 this.setState({ categories: data })
                 this.getChores();
             })
@@ -34,9 +38,15 @@ class Dashboard extends Component {
         }
     }
 
+    handleCategoryClick = (event) => {
+        event.preventDefault();
+        localStorage.setItem('categoryId', event.target.id);
+        this.categoryId = localStorage.getItem('categoryId');
+        this.getChores();
+    }
+
     getChores() {
-        console.log('get chores', this.state.categories);
-        fetch(`${baseUrl}/get-chores-by-categoryId/${this.state.categories[0].id}`)
+        fetch(`${baseUrl}/get-chores-by-categoryId/${this.categoryId}`)
             .then(res => {
                 return res.json();
             })
@@ -55,7 +65,9 @@ class Dashboard extends Component {
 
         return (
             <div className="row">
-                <SideMenuBar categories={this.state.categories}/>
+                <SideMenuBar categories={this.state.categories}
+                handleCategoryClick={this.handleCategoryClick}/>
+
                 <div className="col s8">
                     <ul>
                         {this.state.chores.map(chore => (
