@@ -6,14 +6,13 @@ const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 class Dashboard extends Component {
     state = {
         categories: [],
-        chores: [],
-        isLoggedIn: true
+        chores: []
     }
 
     componentDidMount() {
         this.user = JSON.parse(localStorage.getItem('user'));
         if(!this.user) {
-            this.setState({ isLoggedIn: false });
+            this.props.setIsLoggedIn(false);
         }
         this.getCategories();
     }
@@ -28,9 +27,10 @@ class Dashboard extends Component {
                 this.categoryId = localStorage.getItem('categoryId');
                 if(!this.categoryId) {
                     localStorage.setItem('categoryId', data[0].id)
+                    this.categoryId = localStorage.getItem('categoryId');
                 }
-                this.setState({ categories: data })
                 this.getChores();
+                this.setState({ categories: data })
             })
             .catch(err => {
                 console.log(err);
@@ -46,20 +46,23 @@ class Dashboard extends Component {
     }
 
     getChores() {
-        fetch(`${baseUrl}/get-chores-by-categoryId/${this.categoryId}`)
+        if(this.categoryId) {
+            fetch(`${baseUrl}/get-chores-by-categoryId/${this.categoryId}`)
             .then(res => {
                 return res.json();
             })
             .then(data => {
-                this.setState({ chores: data });
+                console.log(data);
+                    this.setState({ chores: data });
             })
             .catch(err => {
                 console.log(err);
             });
+        }
     }
 
     render() {
-        if(!this.state.isLoggedIn) {
+        if(!this.props.isLoggedInState) {
             return <Redirect push to='/' />
         }
 

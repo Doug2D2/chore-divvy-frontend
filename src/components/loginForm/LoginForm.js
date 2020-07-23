@@ -5,7 +5,6 @@ const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class LoginForm extends Component {
     state = {
-        isLoggedIn: false,
         usernameInput: '',
         passwordInput: '',
         loginErrorMsg: ''
@@ -14,9 +13,7 @@ class LoginForm extends Component {
     componentDidMount() {
         this.user = localStorage.getItem('user');
         if(this.user) {
-            this.setState({
-                isLoggedIn: true
-            });
+            this.props.setIsLoggedIn(true);
         }
     }
 
@@ -46,11 +43,10 @@ class LoginForm extends Component {
         })
         .then(data => {
             localStorage.setItem('user', JSON.stringify({ firstName: data.first_name, userId: data.id }));
-            this.setState({ 
-                isLoggedIn: true
-            });
+            this.props.setIsLoggedIn(true);
         })
         .catch(err => {
+            console.log(err);
             this.setState({ loginErrorMsg: 'Server Error' });
         });
     }
@@ -64,7 +60,7 @@ class LoginForm extends Component {
     }
 
     render() {
-        if(this.state.isLoggedIn) {
+        if(this.props.isLoggedInState) {
             return <Redirect push to='/dashboard' />
         }
 
