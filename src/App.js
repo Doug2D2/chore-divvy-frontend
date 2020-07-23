@@ -8,14 +8,22 @@ import SignUpForm from './components/signUpForm/SignUpForm';
 import ForgotPassword from './components/forgotPassword/ForgotPassword';
 
 class App extends Component {
+  state = {
+    isLoggedIn: false
+  }
+
+  setIsLoggedIn = (loginBool) => {
+    this.setState({ isLoggedIn: loginBool });
+  }
+
   render() {
     return (
       <div className="App">
-        <Header />
+        <Header setIsLoggedIn={this.setIsLoggedIn} isLoggedInState={this.state.isLoggedIn}/>
         <Router>
           <Switch>
-            <Route path='/' exact component={LoginForm}/>
-            <Route path='/dashboard' component={Dashboard}/>
+            <Route path='/' exact render={(routeProps) => (<LoginForm {...routeProps} setIsLoggedIn={this.setIsLoggedIn} isLoggedInState={this.state.isLoggedIn}/>)} />
+            <Route path='/dashboard' render={(routeProps) => (<Dashboard {...routeProps} setIsLoggedIn={this.setIsLoggedIn} isLoggedInState={this.state.isLoggedIn}/>)}/>
             <Route path='/sign-up-form' component={SignUpForm}/>
             <Route path='/forgot-password' component={ForgotPassword}/>
           </Switch>

@@ -6,14 +6,13 @@ const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 class Dashboard extends Component {
     state = {
         categories: [],
-        chores: [],
-        isLoggedIn: true
+        chores: []
     }
 
     componentDidMount() {
         this.user = JSON.parse(localStorage.getItem('user'));
         if(!this.user) {
-            this.setState({ isLoggedIn: false });
+            this.props.setIsLoggedIn(false);
         }
         this.getCategories();
     }
@@ -63,7 +62,7 @@ class Dashboard extends Component {
     }
 
     render() {
-        if(!this.state.isLoggedIn) {
+        if(!this.props.isLoggedInState) {
             return <Redirect push to='/' />
         }
 
@@ -73,7 +72,6 @@ class Dashboard extends Component {
                 handleCategoryClick={this.handleCategoryClick}/>
 
                 <div className="col s8">
-                    {console.log(this.state.chores)}
                     <ul>
                         {this.state.chores.map(chore => (
                             <li key={chore.id}>{chore.chore_name}</li>

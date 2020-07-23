@@ -1,23 +1,18 @@
 import React, { Component } from 'react';
 import '../header/Header.css';
 
-class Header extends Component{
-    state = {
-        isLoggedIn: false
-    }
+class Header extends Component {
 
     componentDidMount() {
         if(localStorage.getItem('user')) {
-            this.setState({ isLoggedIn: true });
+            this.props.setIsLoggedIn(true);
         }
     }
 
     handleLogout(e) {
         e.preventDefault();
         localStorage.clear();
-        this.setState({
-            isLoggedIn: false
-        });
+        this.props.setIsLoggedIn(false);
         window.location.reload();
     }
 
@@ -33,7 +28,7 @@ class Header extends Component{
                         <li><a href="/sign-up-form">Sign Up</a></li>
                     </ul>
                     <ul id="nav-mobile" className="right hide-on-med-and-down">
-                    { this.state.isLoggedIn ? 
+                    { this.props.isLoggedInState ? 
                             <li onClick={(e) => this.handleLogout(e)}><a href="/">Logout</a></li>
                         :
                             <li></li>
