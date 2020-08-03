@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import SideMenuBar from '../sideMenuBar/SideMenuBar';
+import AddCategoryModal from './addCategoryModal/AddCategoryModal';
+import M from "materialize-css";
 import { Redirect } from 'react-router-dom';
+import '../dashboard/dashboard.css';
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class Dashboard extends Component {
@@ -45,6 +48,17 @@ class Dashboard extends Component {
         this.getChores();
     }
 
+    addCategory = (event) => {
+        event.preventDefault();
+
+        let elem = document.querySelector('.modal');
+        M.Modal.init(elem, {});
+        let instance = M.Modal.getInstance(elem);
+
+        instance.open();
+
+    }
+
     getChores() {
         if(this.categoryId) {
             fetch(`${baseUrl}/get-chores-by-categoryId/${this.categoryId}`)
@@ -52,8 +66,7 @@ class Dashboard extends Component {
                 return res.json();
             })
             .then(data => {
-                console.log(data);
-                    this.setState({ chores: data });
+                this.setState({ chores: data });
             })
             .catch(err => {
                 console.log(err);
@@ -69,7 +82,8 @@ class Dashboard extends Component {
         return (
             <div className="row">
                 <SideMenuBar categories={this.state.categories}
-                handleCategoryClick={this.handleCategoryClick}/>
+                handleCategoryClick={this.handleCategoryClick}
+                addCategory={this.addCategory}/>
 
                 <div className="col s8">
                     <ul>
@@ -78,6 +92,9 @@ class Dashboard extends Component {
                         ))}
                     </ul>
                 </div>
+
+                <AddCategoryModal />
+
             </div>
         )
     }
