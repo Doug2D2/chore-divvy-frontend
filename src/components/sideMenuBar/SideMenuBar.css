@@ -2,3 +2,17 @@
     background-color: lightgray;
     height: 100vh;
 }
+
+.categoryList {
+    font-size: 21px;
+    margin-left: 15px;
+}
+
+.closeCategoryIcon {
+    margin-right: 20px;
+    margin-top: 7px;
+}
+
+.editCategoryIcon {
+    margin-top: 7px;
+}
