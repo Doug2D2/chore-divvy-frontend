@@ -18,12 +18,16 @@ class AddCategoryModal extends Component {
     handleAddUserChange = (event) => {
         let indexArr = event.target.id.split("_");
         let index = indexArr[indexArr.length - 1];
-
         let tempArr = this.state.addUserInputs;
         tempArr[index] = event.target.value;
         this.setState({ addUserInputs: tempArr });
+    }
 
-        // this.setState({ userInput: event.target.value });
+    handleRemoveUser = (event, index) => {
+        event.preventDefault();
+        let tempArr = this.state.addUserInputs;
+        tempArr.splice(index, 1);
+        this.setState({ addUserInputs: tempArr });
     }
 
     handleCategoryNameChange = (event) => {
@@ -44,7 +48,9 @@ class AddCategoryModal extends Component {
                         </div>
 
                         {this.state.addUserInputs.map((input, index) => (
-                            <AddUserInput key={index} i={index} userInput={input} handleAddUserChange={this.handleAddUserChange}/>
+                            <AddUserInput key={index} i={index} userInput={input} 
+                            handleAddUserChange={this.handleAddUserChange}
+                            handleRemoveUser={this.handleRemoveUser}/>
                         ))}
                         
                         <div className='col s8 offset-s2'>
@@ -53,7 +59,9 @@ class AddCategoryModal extends Component {
                     </div>
                 </div>
                 <div className="modal-footer">
-                    <a href="#!" className="modal-close waves-effect waves-green btn-flat">Save</a>
+                    <a href="#!" className="modal-close waves-effect waves-green btn-flat"
+                    onClick={(e) => {this.props.handleSaveCategory(e, this.state.addUserInputs, this.state.categoryNameInput)}}
+                    >Save</a>
                 </div>
             </div>
         )

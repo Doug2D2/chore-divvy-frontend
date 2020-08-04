@@ -74,6 +74,18 @@ class Dashboard extends Component {
         }
     }
 
+    handleSaveCategory = (event, users, categoryName) => {
+        event.preventDefault();
+
+        //add current user to users Array
+        //call API to add category
+        //ensure all users email is in the correct format
+        if(categoryName) {
+
+        }
+
+    }
+
     render() {
         if(!this.props.isLoggedInState) {
             return <Redirect push to='/' />
@@ -93,7 +105,7 @@ class Dashboard extends Component {
                     </ul>
                 </div>
 
-                <AddCategoryModal />
+                <AddCategoryModal handleSaveCategory={this.handleSaveCategory}/>
 
             </div>
         )
