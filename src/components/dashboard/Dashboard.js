@@ -41,6 +41,30 @@ class Dashboard extends Component {
         }
     }
 
+    addNewCategory(categoryName, userIdArr) {
+        //API call to add category
+        fetch(`${baseUrl}/add-category`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                categoryName: categoryName,
+                userIds: userIdArr
+            })
+        }) 
+        .then(res => {
+            return res.json();
+        })
+        .then(newCategoryData => {
+            localStorage.setItem('categoryId', newCategoryData.id);
+            this.getCategories();
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+
     handleCategoryClick = (event) => {
         event.preventDefault();
         localStorage.setItem('categoryId', event.target.id);
@@ -48,9 +72,8 @@ class Dashboard extends Component {
         this.getChores();
     }
 
-    addCategory = (event) => {
+    openAddCategoryModal = (event) => {
         event.preventDefault();
-
         let elem = document.querySelector('.modal');
         M.Modal.init(elem, {});
         let instance = M.Modal.getInstance(elem);
@@ -76,12 +99,30 @@ class Dashboard extends Component {
 
     handleSaveCategory = (event, users, categoryName) => {
         event.preventDefault();
-
-        //add current user to users Array
-        //call API to add category
-        //ensure all users email is in the correct format
         if(categoryName) {
-
+            let userIdArr = [this.user.userId];
+            if(users.length > 0) {
+                fetch(`${baseUrl}/get-users`)
+                .then(res => {
+                    return res.json();
+                })
+                .then(userTable => {
+                    for(let x = 0; x < users.length; x++) {
+                        for(let y = 0; y < userTable.length; y++) {
+                            if(users[x].toLowerCase() === userTable[y].username.toLowerCase()) {
+                                userIdArr.push(userTable[y].id);
+                            } 
+                        }
+                    }
+                    userIdArr = [...new Set(userIdArr)];
+                    this.addNewCategory(categoryName, userIdArr);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            } else {
+                this.addNewCategory(categoryName, userIdArr);
+            }
         }
 
     }
@@ -95,7 +136,7 @@ class Dashboard extends Component {
             <div className="row">
                 <SideMenuBar categories={this.state.categories}
                 handleCategoryClick={this.handleCategoryClick}
-                addCategory={this.addCategory}/>
+                openAddCategoryModal={this.openAddCategoryModal}/>
 
                 <div className="col s8">
                     <ul>

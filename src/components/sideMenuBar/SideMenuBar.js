@@ -12,7 +12,7 @@ function SideMenuBar(props) {
             <hr/>
             <button 
                 className='btn btn-large' 
-                onClick={(e) => {props.addCategory(e)}}>
+                onClick={(e) => {props.openAddCategoryModal(e)}}>
                     <i className="material-icons left">add</i>
                     Add Category
             </button>
