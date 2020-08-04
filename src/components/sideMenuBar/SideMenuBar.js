@@ -4,23 +4,30 @@ import '../sideMenuBar/SideMenuBar.css';
 function SideMenuBar(props) {
     return(
         <div className="col s3 sideMenuBar">
-            {/* <div className='row'> */}
                 <ul>
                     {props.categories.map(category => (
                         <li key={category.id} id={category.id} className="categoryList left-align"
                         onClick={(e) => {props.handleCategoryClick(e)}}>
-                            <span>
                                 {category.category_name}
-                            </span>
                             <span >
-                                <a href='#'><i className="material-icons tiny closeCategoryIcon right">close</i></a>
-                                <a href='#'><i className="material-icons tiny right editCategoryIcon">edit</i></a>
+                                <a href='#'>
+                                    <i className="material-icons closeCategoryIcon right"
+                                    onClick={(e) => {props.handleDeleteCategory(e, category.id)}}>
+                                        close
+                                    </i>
+                                </a>
+                                <a href='#'>
+                                    <i className="material-icons right editCategoryIcon"
+                                    onClick={(e) => {props.handleEditCategory(e, category.id)}}>
+                                        edit
+                                    </i>
+                                </a>
                             </span>
+                            <hr className='categoryHrTag'></hr>
                         </li>
+                        
                     ))}
                 </ul>
-            {/* </div> */}
-            <hr/>
             <button 
                 className='btn btn-large' 
                 onClick={(e) => {props.openAddCategoryModal(e)}}>

@@ -20,6 +20,21 @@ class Dashboard extends Component {
         this.getCategories();
     }
 
+    getChores() {
+        if(this.categoryId) {
+            fetch(`${baseUrl}/get-chores-by-categoryId/${this.categoryId}`)
+            .then(res => {
+                return res.json();
+            })
+            .then(data => {
+                this.setState({ chores: data });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+    }
+
     getCategories() {
         if(this.user) {
             fetch(`${baseUrl}/get-categories-by-userId/${this.user.userId}`)
@@ -39,6 +54,23 @@ class Dashboard extends Component {
                 console.log(err);
             })
         }
+    }
+
+    handleCategoryClick = (event) => {
+        event.preventDefault();
+        localStorage.setItem('categoryId', event.target.id);
+        this.categoryId = localStorage.getItem('categoryId');
+        this.getChores();
+    }
+
+    openAddCategoryModal = (event) => {
+        event.preventDefault();
+        let elem = document.querySelector('.modal');
+        M.Modal.init(elem, {});
+        let instance = M.Modal.getInstance(elem);
+
+        instance.open();
+
     }
 
     addNewCategory(categoryName, userIdArr) {
@@ -63,38 +95,6 @@ class Dashboard extends Component {
         .catch(err => {
             console.log(err);
         })
-    }
-
-    handleCategoryClick = (event) => {
-        event.preventDefault();
-        localStorage.setItem('categoryId', event.target.id);
-        this.categoryId = localStorage.getItem('categoryId');
-        this.getChores();
-    }
-
-    openAddCategoryModal = (event) => {
-        event.preventDefault();
-        let elem = document.querySelector('.modal');
-        M.Modal.init(elem, {});
-        let instance = M.Modal.getInstance(elem);
-
-        instance.open();
-
-    }
-
-    getChores() {
-        if(this.categoryId) {
-            fetch(`${baseUrl}/get-chores-by-categoryId/${this.categoryId}`)
-            .then(res => {
-                return res.json();
-            })
-            .then(data => {
-                this.setState({ chores: data });
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        }
     }
 
     handleSaveCategory = (event, users, categoryName) => {
@@ -127,6 +127,27 @@ class Dashboard extends Component {
 
     }
 
+    handleDeleteCategory = (event, categoryId) => {
+        event.preventDefault();
+        if(categoryId) {
+            fetch(`${baseUrl}/delete-category/${categoryId}`, {
+                method: 'DELETE'
+            })
+            .then(res => {
+                res.json();
+                this.getCategories();
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+    }
+
+    handleEditCategory = (event, categoryId) => {
+        event.preventDefault();
+        console.log('edit categoryID ', categoryId);
+    }
+
     render() {
         if(!this.props.isLoggedInState) {
             return <Redirect push to='/' />
@@ -136,7 +157,9 @@ class Dashboard extends Component {
             <div className="row">
                 <SideMenuBar categories={this.state.categories}
                 handleCategoryClick={this.handleCategoryClick}
-                openAddCategoryModal={this.openAddCategoryModal}/>
+                openAddCategoryModal={this.openAddCategoryModal}
+                handleDeleteCategory={this.handleDeleteCategory}
+                handleEditCategory={this.handleEditCategory}/>
 
                 <div className="col s8">
                     <ul>
