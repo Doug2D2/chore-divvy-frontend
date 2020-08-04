@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import SideMenuBar from '../sideMenuBar/SideMenuBar';
+import AddCategoryModal from './addCategoryModal/AddCategoryModal';
+import M from "materialize-css";
 import { Redirect } from 'react-router-dom';
+import '../dashboard/dashboard.css';
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class Dashboard extends Component {
@@ -38,11 +41,45 @@ class Dashboard extends Component {
         }
     }
 
+    addNewCategory(categoryName, userIdArr) {
+        //API call to add category
+        fetch(`${baseUrl}/add-category`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                categoryName: categoryName,
+                userIds: userIdArr
+            })
+        }) 
+        .then(res => {
+            return res.json();
+        })
+        .then(newCategoryData => {
+            localStorage.setItem('categoryId', newCategoryData.id);
+            this.getCategories();
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+
     handleCategoryClick = (event) => {
         event.preventDefault();
         localStorage.setItem('categoryId', event.target.id);
         this.categoryId = localStorage.getItem('categoryId');
         this.getChores();
+    }
+
+    openAddCategoryModal = (event) => {
+        event.preventDefault();
+        let elem = document.querySelector('.modal');
+        M.Modal.init(elem, {});
+        let instance = M.Modal.getInstance(elem);
+
+        instance.open();
+
     }
 
     getChores() {
@@ -52,13 +89,42 @@ class Dashboard extends Component {
                 return res.json();
             })
             .then(data => {
-                console.log(data);
-                    this.setState({ chores: data });
+                this.setState({ chores: data });
             })
             .catch(err => {
                 console.log(err);
             });
         }
+    }
+
+    handleSaveCategory = (event, users, categoryName) => {
+        event.preventDefault();
+        if(categoryName) {
+            let userIdArr = [this.user.userId];
+            if(users.length > 0) {
+                fetch(`${baseUrl}/get-users`)
+                .then(res => {
+                    return res.json();
+                })
+                .then(userTable => {
+                    for(let x = 0; x < users.length; x++) {
+                        for(let y = 0; y < userTable.length; y++) {
+                            if(users[x].toLowerCase() === userTable[y].username.toLowerCase()) {
+                                userIdArr.push(userTable[y].id);
+                            } 
+                        }
+                    }
+                    userIdArr = [...new Set(userIdArr)];
+                    this.addNewCategory(categoryName, userIdArr);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            } else {
+                this.addNewCategory(categoryName, userIdArr);
+            }
+        }
+
     }
 
     render() {
@@ -69,7 +135,8 @@ class Dashboard extends Component {
         return (
             <div className="row">
                 <SideMenuBar categories={this.state.categories}
-                handleCategoryClick={this.handleCategoryClick}/>
+                handleCategoryClick={this.handleCategoryClick}
+                openAddCategoryModal={this.openAddCategoryModal}/>
 
                 <div className="col s8">
                     <ul>
@@ -78,6 +145,9 @@ class Dashboard extends Component {
                         ))}
                     </ul>
                 </div>
+
+                <AddCategoryModal handleSaveCategory={this.handleSaveCategory}/>
+
             </div>
         )
     }
