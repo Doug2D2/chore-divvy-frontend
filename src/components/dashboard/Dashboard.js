@@ -10,9 +10,9 @@ const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 class Dashboard extends Component {
     state = {
         categories: [],
-        chores: []
+        chores: [],
+        categoryToBeEdited: {}
     }
-    editCategoryIndex = -1;
 
     componentDidMount() {
         this.user = JSON.parse(localStorage.getItem('user'));
@@ -71,7 +71,7 @@ class Dashboard extends Component {
         if(modal === '.editModal' && category) {
             for(let x = 0; x < this.state.categories.length; x++) {
                 if(category.id === this.state.categories[x].id) {
-                    this.editCategoryIndex = x;
+                    this.setState({ categoryToBeEdited: this.state.categories[x] });
                 }
             }
         }
@@ -194,7 +194,7 @@ class Dashboard extends Component {
                 </div>
 
                 <AddCategoryModal handleSaveCategory={this.handleSaveCategory}/>
-                <EditCategoryModal />
+                <EditCategoryModal categoryToBeEdited={this.state.categoryToBeEdited}/>
 
             </div>
         )
