@@ -81,7 +81,7 @@ class Dashboard extends Component {
         instance.open();
     }
 
-    addNewCategory(categoryName, userIdArr) {
+    addNewCategory = (categoryName, userIdArr) => {
         //API call to add category
         fetch(`${baseUrl}/add-category`, {
             method: 'POST',
@@ -105,35 +105,34 @@ class Dashboard extends Component {
         })
     }
 
-    handleSaveCategory = (event, users, categoryName) => {
-        event.preventDefault();
-        if(categoryName) {
-            let userIdArr = [this.user.userId];
-            if(users.length > 0) {
-                fetch(`${baseUrl}/get-users`)
-                .then(res => {
-                    return res.json();
-                })
-                .then(userTable => {
-                    for(let x = 0; x < users.length; x++) {
-                        for(let y = 0; y < userTable.length; y++) {
-                            if(users[x].toLowerCase() === userTable[y].username.toLowerCase()) {
-                                userIdArr.push(userTable[y].id);
-                            } 
-                        }
-                    }
-                    userIdArr = [...new Set(userIdArr)];
-                    this.addNewCategory(categoryName, userIdArr);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-            } else {
-                this.addNewCategory(categoryName, userIdArr);
-            }
-        }
-
-    }
+    // handleSaveCategory = (event, users, categoryName) => {
+    //     event.preventDefault();
+    //     if(categoryName) {
+    //         let userIdArr = [this.user.userId];
+    //         if(users.length > 0) {
+    //             fetch(`${baseUrl}/get-users`)
+    //             .then(res => {
+    //                 return res.json();
+    //             })
+    //             .then(userTable => {
+    //                 for(let x = 0; x < users.length; x++) {
+    //                     for(let y = 0; y < userTable.length; y++) {
+    //                         if(users[x].toLowerCase() === userTable[y].username.toLowerCase()) {
+    //                             userIdArr.push(userTable[y].id);
+    //                         } 
+    //                     }
+    //                 }
+    //                 userIdArr = [...new Set(userIdArr)];
+    //                 this.addNewCategory(categoryName, userIdArr);
+    //             })
+    //             .catch(err => {
+    //                 console.log(err);
+    //             });
+    //         } else {
+    //             this.addNewCategory(categoryName, userIdArr);
+    //         }
+    //     }
+    // }
 
     handleDeleteCategory = (event, categoryId) => {
         event.preventDefault();
@@ -193,7 +192,7 @@ class Dashboard extends Component {
                     </ul>
                 </div>
 
-                <AddCategoryModal handleSaveCategory={this.handleSaveCategory}/>
+                <AddCategoryModal addNewCategory={this.addNewCategory}/>
                 <EditCategoryModal categoryToBeEdited={this.state.categoryToBeEdited}/>
 
             </div>

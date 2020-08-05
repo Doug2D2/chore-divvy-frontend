@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AddUserInput from './addUserInput/AddUserInput';
 import '../addCategoryModal/addCategoryModal.css';
+const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class AddCategoryModal extends Component {
     state = {
@@ -34,6 +35,43 @@ class AddCategoryModal extends Component {
         this.setState({ categoryNameInput: event.target.value})
     }
 
+    handleSaveCategory = (event, users, categoryName) => {
+        event.preventDefault();
+        if(categoryName) {
+            let userIdArr = [JSON.parse(localStorage.getItem('user')).userId];
+            if(users.length > 0) {
+                fetch(`${baseUrl}/get-users`)
+                .then(res => {
+                    return res.json();
+                })
+                .then(userTable => {
+                    for(let x = 0; x < users.length; x++) {
+                        for(let y = 0; y < userTable.length; y++) {
+                            if(users[x].toLowerCase() === userTable[y].username.toLowerCase()) {
+                                userIdArr.push(userTable[y].id);
+                            } 
+                        }
+                    }
+                    userIdArr = [...new Set(userIdArr)];
+                    this.props.addNewCategory(categoryName, userIdArr);
+                    this.setState({ 
+                        categoryNameInput: '',
+                        addUserInputs: []
+                    })
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            } else {
+                this.props.addNewCategory(categoryName, userIdArr);
+                this.setState({ 
+                    categoryNameInput: '',
+                    addUserInputs: []
+                })
+            }
+        }
+    }
+
     render() {
         return (
             <div id="modal1" className="modal addModal modal-fixed-footer">
@@ -60,7 +98,7 @@ class AddCategoryModal extends Component {
                 </div>
                 <div className="modal-footer">
                     <a href="#!" className="modal-close waves-effect waves-green btn-flat"
-                    onClick={(e) => {this.props.handleSaveCategory(e, this.state.addUserInputs, this.state.categoryNameInput)}}
+                    onClick={(e) => {this.handleSaveCategory(e, this.state.addUserInputs, this.state.categoryNameInput)}}
                     >Save</a>
                 </div>
             </div>
