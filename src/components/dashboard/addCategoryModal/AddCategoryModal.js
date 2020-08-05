@@ -36,7 +36,7 @@ class AddCategoryModal extends Component {
 
     render() {
         return (
-            <div id="modal1" className="modal modal-fixed-footer">
+            <div id="modal1" className="modal addModal modal-fixed-footer">
                 <div className="modal-content">
                     <div className='row'>
                         <div className='col s8 offset-s2'>

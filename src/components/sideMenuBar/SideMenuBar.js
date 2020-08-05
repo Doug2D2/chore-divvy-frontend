@@ -10,18 +10,18 @@ function SideMenuBar(props) {
                         onClick={(e) => {props.handleCategoryClick(e)}}>
                                 {category.category_name}
                             <span >
-                                <a href='#'>
+                                {/* <a href='#'> */}
                                     <i className="material-icons closeCategoryIcon right"
                                     onClick={(e) => {props.handleDeleteCategory(e, category.id)}}>
                                         close
                                     </i>
-                                </a>
-                                <a href='#'>
+                                {/* </a> */}
+                                {/* <a href='#'> */}
                                     <i className="material-icons right editCategoryIcon"
-                                    onClick={(e) => {props.handleEditCategory(e, category.id)}}>
+                                    onClick={(e) => {props.handleOpenModal(e, '.editModal', category)}}>
                                         edit
                                     </i>
-                                </a>
+                                {/* </a> */}
                             </span>
                             <hr className='categoryHrTag'></hr>
                         </li>
@@ -30,7 +30,7 @@ function SideMenuBar(props) {
                 </ul>
             <button 
                 className='btn btn-large' 
-                onClick={(e) => {props.openAddCategoryModal(e)}}>
+                onClick={(e) => {props.handleOpenModal(e, '.addModal')}}>
                     <i className="material-icons left">add</i>
                     Add Category
             </button>

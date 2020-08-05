@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SideMenuBar from '../sideMenuBar/SideMenuBar';
 import AddCategoryModal from './addCategoryModal/AddCategoryModal';
+import EditCategoryModal from './editCategoryModal/EditCategoryModal';
 import M from "materialize-css";
 import { Redirect } from 'react-router-dom';
 import '../dashboard/dashboard.css';
@@ -11,6 +12,7 @@ class Dashboard extends Component {
         categories: [],
         chores: []
     }
+    editCategoryIndex = -1;
 
     componentDidMount() {
         this.user = JSON.parse(localStorage.getItem('user'));
@@ -63,14 +65,20 @@ class Dashboard extends Component {
         this.getChores();
     }
 
-    openAddCategoryModal = (event) => {
+    handleOpenModal = (event, modal, category = {}) => {
         event.preventDefault();
-        let elem = document.querySelector('.modal');
+        let elem = document.querySelector(modal);
+        if(modal === '.editModal' && category) {
+            for(let x = 0; x < this.state.categories.length; x++) {
+                if(category.id === this.state.categories[x].id) {
+                    this.editCategoryIndex = x;
+                }
+            }
+        }
         M.Modal.init(elem, {});
         let instance = M.Modal.getInstance(elem);
 
         instance.open();
-
     }
 
     addNewCategory(categoryName, userIdArr) {
@@ -143,9 +151,26 @@ class Dashboard extends Component {
         }
     }
 
-    handleEditCategory = (event, categoryId) => {
-        event.preventDefault();
-        console.log('edit categoryID ', categoryId);
+    handleEditCategory = (event, category) => {
+
+        //Edit Category API
+        // if(categoryId) {
+        //     fetch(``, {
+        //         method: 'PUT',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify({
+
+        //         })
+        //     })
+        //     .then(res => {
+        //         console.log(res);
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //     });
+        // }
     }
 
     render() {
@@ -157,9 +182,8 @@ class Dashboard extends Component {
             <div className="row">
                 <SideMenuBar categories={this.state.categories}
                 handleCategoryClick={this.handleCategoryClick}
-                openAddCategoryModal={this.openAddCategoryModal}
-                handleDeleteCategory={this.handleDeleteCategory}
-                handleEditCategory={this.handleEditCategory}/>
+                handleOpenModal={this.handleOpenModal}
+                handleDeleteCategory={this.handleDeleteCategory}/>
 
                 <div className="col s8">
                     <ul>
@@ -170,6 +194,7 @@ class Dashboard extends Component {
                 </div>
 
                 <AddCategoryModal handleSaveCategory={this.handleSaveCategory}/>
+                <EditCategoryModal />
 
             </div>
         )
