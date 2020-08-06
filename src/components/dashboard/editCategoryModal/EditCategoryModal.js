@@ -3,7 +3,8 @@ import '../editCategoryModal/editCategoryModal.css';
 
 class EditCategoryModal extends Component {
     state = {
-        categoryNameEdit: ''
+        categoryNameEdit: '',
+        userNameEditArr: []
     }
 
     handleCategoryNameEdit = (event) => {
@@ -16,6 +17,7 @@ class EditCategoryModal extends Component {
     }
 
     render() {
+        // console.log(this.props.categoryToBeEdited.username);
         return(
             <div id="modal1" className="modal editModal modal-fixed-footer">
                 <div className="modal-content">
@@ -27,6 +29,28 @@ class EditCategoryModal extends Component {
                             required/>
                             <label htmlFor='categoryName'>Category Name</label>
                         </div>
+
+                        {this.props.categoryToBeEdited.username 
+                        ? 
+                            this.props.categoryToBeEdited.username.map((username, index) => (
+                                <div className='row' key={index}>
+                                 <div className='col s7 offset-s2' id='editUserInputDiv'>
+                                    <input placeholder={username} type="text" name="userName" id={`userName_${index}`} 
+                                    // value={props.userInput}
+                                    // onChange={props.handleAddUserChange}
+                                    />
+                                    <label htmlFor='userName'>Username</label>
+                                </div>
+                                <button type='submit' className='btn-floating col s1 red' id='removeUserBtn'
+                                // onClick={(e) => {props.handleRemoveUser(e, props.i)}}
+                                >
+                                    <i className="material-icons left">remove</i>
+                                </button> 
+                            </div>
+                            ))
+                        : 
+                            <div></div>
+                        }
     
                         {/* {this.state.addUserInputs.map((input, index) => (
                             <AddUserInput key={index} i={index} userInput={input} 

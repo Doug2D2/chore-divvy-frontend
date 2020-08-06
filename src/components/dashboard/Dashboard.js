@@ -50,6 +50,7 @@ class Dashboard extends Component {
                     this.categoryId = localStorage.getItem('categoryId');
                 }
                 this.getChores();
+                console.log(data);
                 this.setState({ categories: data })
             })
             .catch(err => {
@@ -65,19 +66,44 @@ class Dashboard extends Component {
         this.getChores();
     }
 
+    updateUsersIdToEmail(category){
+        let usernameArr = [];
+        if(category) {
+            fetch(`${baseUrl}/get-users`)
+            .then(res => {
+                return res.json();
+            })
+            .then(usersTable => {
+                for(let x = 0; x < category.user_id.length; x++) {
+                    for(let y = 0; y < usersTable.length; y++) {
+                        if(usersTable[y].id === category.user_id[x]) {
+                            usernameArr.push(usersTable[y].username);
+                        }
+                    }
+                }
+                category.username = usernameArr;
+                this.setState({ categoryToBeEdited: category });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
+    }
+
     handleOpenModal = (event, modal, category = {}) => {
         event.preventDefault();
         let elem = document.querySelector(modal);
         if(modal === '.editModal' && category) {
             for(let x = 0; x < this.state.categories.length; x++) {
                 if(category.id === this.state.categories[x].id) {
-                    this.setState({ categoryToBeEdited: this.state.categories[x] });
+                    this.updateUsersIdToEmail(this.state.categories[x]);
                 }
             }
         }
+        
+        //open modal
         M.Modal.init(elem, {});
         let instance = M.Modal.getInstance(elem);
-
         instance.open();
     }
 
@@ -104,35 +130,6 @@ class Dashboard extends Component {
             console.log(err);
         })
     }
-
-    // handleSaveCategory = (event, users, categoryName) => {
-    //     event.preventDefault();
-    //     if(categoryName) {
-    //         let userIdArr = [this.user.userId];
-    //         if(users.length > 0) {
-    //             fetch(`${baseUrl}/get-users`)
-    //             .then(res => {
-    //                 return res.json();
-    //             })
-    //             .then(userTable => {
-    //                 for(let x = 0; x < users.length; x++) {
-    //                     for(let y = 0; y < userTable.length; y++) {
-    //                         if(users[x].toLowerCase() === userTable[y].username.toLowerCase()) {
-    //                             userIdArr.push(userTable[y].id);
-    //                         } 
-    //                     }
-    //                 }
-    //                 userIdArr = [...new Set(userIdArr)];
-    //                 this.addNewCategory(categoryName, userIdArr);
-    //             })
-    //             .catch(err => {
-    //                 console.log(err);
-    //             });
-    //         } else {
-    //             this.addNewCategory(categoryName, userIdArr);
-    //         }
-    //     }
-    // }
 
     handleDeleteCategory = (event, categoryId) => {
         event.preventDefault();
