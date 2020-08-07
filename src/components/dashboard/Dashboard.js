@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SideMenuBar from '../sideMenuBar/SideMenuBar';
 import AddCategoryModal from './addCategoryModal/AddCategoryModal';
-import EditCategoryModal from './editCategoryModal/EditCategoryModal';
+// import EditCategoryModal from './editCategoryModal/EditCategoryModal';
 import M from "materialize-css";
 import { Redirect } from 'react-router-dom';
 import '../dashboard/dashboard.css';
@@ -11,7 +11,8 @@ class Dashboard extends Component {
     state = {
         categories: [],
         chores: [],
-        categoryToBeEdited: {}
+        categoryName: '',
+        users: []
     }
 
     componentDidMount() {
@@ -50,7 +51,6 @@ class Dashboard extends Component {
                     this.categoryId = localStorage.getItem('categoryId');
                 }
                 this.getChores();
-                console.log(data);
                 this.setState({ categories: data })
             })
             .catch(err => {
@@ -82,7 +82,9 @@ class Dashboard extends Component {
                     }
                 }
                 category.username = usernameArr;
-                this.setState({ categoryToBeEdited: category });
+                this.setState({ 
+                    categoryName: category.category_name,
+                    users: category.username });
             })
             .catch(err => {
                 console.log(err);
@@ -92,18 +94,19 @@ class Dashboard extends Component {
 
     handleOpenModal = (event, modal, category = {}) => {
         event.preventDefault();
-        let elem = document.querySelector(modal);
         if(modal === '.editModal' && category) {
             for(let x = 0; x < this.state.categories.length; x++) {
                 if(category.id === this.state.categories[x].id) {
-                    this.updateUsersIdToEmail(this.state.categories[x]);
+                    console.log(category);
+                    this.updateUsersIdToEmail(category);
                 }
             }
         }
-        
-        //open modal
+
+        let elem = document.querySelector(modal);
         M.Modal.init(elem, {});
         let instance = M.Modal.getInstance(elem);
+
         instance.open();
     }
 
@@ -145,6 +148,14 @@ class Dashboard extends Component {
                 console.log(err);
             });
         }
+    }
+
+    handleCategoryNameInputEdit = (event) => {
+        this.setState({ categoryName: event.target.value });
+    }
+
+    handleCategoryUsernameInputEdit = (event, usernameIndex) => {
+        this.setState({ users: event.target.value });
     }
 
     handleEditCategory = (event, category) => {
@@ -190,9 +201,61 @@ class Dashboard extends Component {
                 </div>
 
                 <AddCategoryModal addNewCategory={this.addNewCategory}/>
-                <EditCategoryModal categoryToBeEdited={this.state.categoryToBeEdited}/>
+
+                {/* {this.state.categoryToBeEditedId > -1 ? 
+                    <EditCategoryModal categoryToBeEditedId={this.state.categoryToBeEditedId}
+                    handleCategoryNameInputEdit={this.handleCategoryNameInputEdit}/>
+                    :
+                    <div></div>
+                } */}
+                <div id="modal1" className="modal editModal modal-fixed-footer">
+                <div className="modal-content">
+                    <div className='row'>
+                        <div className='col s8 offset-s2'>
+                            <input type="text" name="categoryName" id="categoryName" 
+                            value={this.state.categoryName}
+                            onChange={this.handleCategoryNameInputEdit}
+                            required/>
+                            <label htmlFor='categoryName'>Category Name</label>
+                        </div>
+
+                        {this.state.users 
+                        ? 
+                            this.state.users.map((username, index) => (
+                                <div className='row' key={index}>
+                                 <div className='col s7 offset-s2' id='editUserInputDiv'>
+                                    <input placeholder={username} type="text" name="userName" id={`userName_${index}`} 
+                                    value={username}
+                                    onChange={(e) => {this.handleCategoryUsernameInputEdit(e, index)}}
+                                    />
+                                    <label htmlFor='userName'>Username</label>
+                                </div>
+                                <button type='submit' className='btn-floating col s1 red' id='removeUserBtn'
+                                // onClick={(e) => {props.handleRemoveUser(e, props.i)}}
+                                >
+                                    <i className="material-icons left">remove</i>
+                                </button> 
+                            </div>
+                            ))
+                        : 
+                            <div></div>
+                        }
+                        
+                        <div className='col s8 offset-s2'>
+                            <button className='btn btn-large' onClick={(e) => {this.handleAddUser(e)}}>Add User</button>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal-footer">
+                    <a href="#!" className="modal-close waves-effect waves-green btn-flat"
+                    // onClick={(e) => {this.props.handleSaveCategory(e, this.state.addUserInputs, this.state.categoryNameInput)}}
+                    >Save</a>
+                </div>
+            </div>
 
             </div>
+                            
+            // </div>
         )
     }
 }
