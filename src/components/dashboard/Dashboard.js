@@ -68,6 +68,7 @@ class Dashboard extends Component {
 
     updateUsersIdToEmail(category){
         let usernameArr = [];
+        let currUserId = JSON.parse(localStorage.getItem('user')).userId;
         if(category) {
             fetch(`${baseUrl}/get-users`)
             .then(res => {
@@ -76,7 +77,8 @@ class Dashboard extends Component {
             .then(usersTable => {
                 for(let x = 0; x < category.user_id.length; x++) {
                     for(let y = 0; y < usersTable.length; y++) {
-                        if(usersTable[y].id === category.user_id[x]) {
+                        //if category and usertable id matches && category id isn't loggedin users id
+                        if(usersTable[y].id === category.user_id[x] && category.user_id[x] !== currUserId) {
                             usernameArr.push(usersTable[y].username);
                         }
                     }
@@ -84,7 +86,8 @@ class Dashboard extends Component {
                 category.username = usernameArr;
                 this.setState({ 
                     categoryName: category.category_name,
-                    users: category.username });
+                    users: category.username 
+                });
             })
             .catch(err => {
                 console.log(err);
@@ -97,7 +100,6 @@ class Dashboard extends Component {
         if(modal === '.editModal' && category) {
             for(let x = 0; x < this.state.categories.length; x++) {
                 if(category.id === this.state.categories[x].id) {
-                    console.log(category);
                     this.updateUsersIdToEmail(category);
                 }
             }
@@ -155,7 +157,23 @@ class Dashboard extends Component {
     }
 
     handleCategoryUsernameInputEdit = (event, usernameIndex) => {
-        this.setState({ users: event.target.value });
+        let tempUsers = this.state.users;
+        tempUsers[usernameIndex] = event.target.value
+        this.setState({ users: tempUsers });
+    }
+
+    handleRemoveUserInEdit = (event, index) => {
+        event.preventDefault();
+        let tempArr = this.state.users;
+        tempArr.splice(index, 1);
+        this.setState({ users: tempArr });
+    }
+
+    handleAddUserClickInEdit = (event) => {
+        event.preventDefault();
+        let tempArr = this.state.users;
+        tempArr.push("");
+        this.setState({ users: tempArr })
     }
 
     handleEditCategory = (event, category) => {
@@ -202,12 +220,6 @@ class Dashboard extends Component {
 
                 <AddCategoryModal addNewCategory={this.addNewCategory}/>
 
-                {/* {this.state.categoryToBeEditedId > -1 ? 
-                    <EditCategoryModal categoryToBeEditedId={this.state.categoryToBeEditedId}
-                    handleCategoryNameInputEdit={this.handleCategoryNameInputEdit}/>
-                    :
-                    <div></div>
-                } */}
                 <div id="modal1" className="modal editModal modal-fixed-footer">
                 <div className="modal-content">
                     <div className='row'>
@@ -230,8 +242,8 @@ class Dashboard extends Component {
                                     />
                                     <label htmlFor='userName'>Username</label>
                                 </div>
-                                <button type='submit' className='btn-floating col s1 red' id='removeUserBtn'
-                                // onClick={(e) => {props.handleRemoveUser(e, props.i)}}
+                                <button type='submit' className='btn-floating col s1 red' id='removeUserInEditBtn'
+                                onClick={(e) => {this.handleRemoveUserInEdit(e, index)}}
                                 >
                                     <i className="material-icons left">remove</i>
                                 </button> 
@@ -242,7 +254,7 @@ class Dashboard extends Component {
                         }
                         
                         <div className='col s8 offset-s2'>
-                            <button className='btn btn-large' onClick={(e) => {this.handleAddUser(e)}}>Add User</button>
+                            <button className='btn btn-large' onClick={(e) => {this.handleAddUserClickInEdit(e)}}>Add User</button>
                         </div>
                     </div>
                 </div>
