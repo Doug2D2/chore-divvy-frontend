@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import SideMenuBar from '../sideMenuBar/SideMenuBar';
 import AddCategoryModal from './addCategoryModal/AddCategoryModal';
-// import EditCategoryModal from './editCategoryModal/EditCategoryModal';
 import M from "materialize-css";
 import { Redirect } from 'react-router-dom';
 import '../dashboard/dashboard.css';

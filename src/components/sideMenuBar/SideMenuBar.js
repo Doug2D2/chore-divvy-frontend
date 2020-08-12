@@ -25,10 +25,9 @@ function SideMenuBar(props) {
                     ))}
                 </ul>
             <button 
-                className='btn btn-large' 
+                className='btn ' 
                 onClick={(e) => {props.handleOpenModal(e, '.addModal')}}>
-                    <i className="material-icons left">add</i>
-                    Add Category
+                    <i className="material-icons">add</i>
             </button>
         </div>
     )
