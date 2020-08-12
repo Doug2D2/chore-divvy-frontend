@@ -9,13 +9,6 @@ class AddCategoryModal extends Component {
         categoryNameInput: ''
     }
 
-    handleAddUser = (event) => {
-        event.preventDefault();
-        let tempArr = this.state.addUserInputs;
-        tempArr.push("");
-        this.setState({ addUserInputs: tempArr })
-    }
-
     handleAddUserChange = (event) => {
         let indexArr = event.target.id.split("_");
         let index = indexArr[indexArr.length - 1];
@@ -52,6 +45,7 @@ class AddCategoryModal extends Component {
                             } 
                         }
                     }
+                    // removes any duplicates in array
                     userIdArr = [...new Set(userIdArr)];
                     this.props.addNewCategory(categoryName, userIdArr);
                     this.setState({ 

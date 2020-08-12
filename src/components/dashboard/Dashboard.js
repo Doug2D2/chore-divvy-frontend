@@ -67,6 +67,7 @@ class Dashboard extends Component {
     }
 
     updateUsersIdToEmail(category){
+        localStorage.setItem('editCategoryId', category.id);
         let usernameArr = [];
         let currUserId = JSON.parse(localStorage.getItem('user')).userId;
         if(category) {
@@ -176,26 +177,62 @@ class Dashboard extends Component {
         this.setState({ users: tempArr })
     }
 
-    handleEditCategory = (event, category) => {
+    handleEditCategory = (event, users, categoryName) => {
+        event.preventDefault();
 
-        //Edit Category API
-        // if(categoryId) {
-        //     fetch(``, {
-        //         method: 'PUT',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({
+        let editCategoryId = JSON.parse(localStorage.getItem('editCategoryId'));
+        let catStatesUsernames = [];
+        let catStatesName = '';
+        for(let i = 0; i < this.state.categories.length; i++) {
+            if(editCategoryId === this.state.categories[i].id) {
+                catStatesUsernames = this.state.categories[i].username;
+                catStatesName = this.state.categories[i].category_name;
+            }
+        }
 
-        //         })
-        //     })
-        //     .then(res => {
-        //         console.log(res);
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     });
-        // }
+        if(categoryName !== catStatesName || users !== catStatesUsernames) {
+            let userIdArr = [JSON.parse(localStorage.getItem('user')).userId];
+            if(users.length > 0) {
+                fetch(`${baseUrl}/get-users`)
+                .then(res => {
+                    return res.json();
+                })
+                .then(userTable => {
+                    for(let x = 0; x < users.length; x++) {
+                        for(let y = 0; y < userTable.length; y++) {
+                            if(users[x].toLowerCase() === userTable[y].username.toLowerCase()) {
+                                userIdArr.push(userTable[y].id);
+                            } 
+                        }
+                    }
+                    // removes any duplicates in array
+                    userIdArr = [...new Set(userIdArr)];
+                    fetch(`${baseUrl}/update-category/${editCategoryId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            categoryName: categoryName,
+                            userIds: userIdArr
+                        })
+                    })
+                    .then(res => {
+                        this.getCategories();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+                    this.setState({ 
+                        categoryName: categoryName,
+                        users: userIdArr
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
+        }
     }
 
     render() {
@@ -260,7 +297,7 @@ class Dashboard extends Component {
                 </div>
                 <div className="modal-footer">
                     <a href="#!" className="modal-close waves-effect waves-green btn-flat"
-                    // onClick={(e) => {this.props.handleSaveCategory(e, this.state.addUserInputs, this.state.categoryNameInput)}}
+                    onClick={(e) => {this.handleEditCategory(e, this.state.users, this.state.categoryName)}}
                     >Save</a>
                 </div>
             </div>
