@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SideMenuBar from '../sideMenuBar/SideMenuBar';
 import AddCategoryModal from './addCategoryModal/AddCategoryModal';
+import Chores from './chores/Chores';
 import M from "materialize-css";
 import { Redirect } from 'react-router-dom';
 import '../dashboard/dashboard.css';
@@ -246,13 +247,7 @@ class Dashboard extends Component {
                 handleOpenModal={this.handleOpenModal}
                 handleDeleteCategory={this.handleDeleteCategory}/>
 
-                <div className="col s8">
-                    <ul>
-                        {this.state.chores.map(chore => (
-                            <li key={chore.id}>{chore.chore_name}</li>
-                        ))}
-                    </ul>
-                </div>
+                <Chores chores={this.state.chores}/>
 
                 <AddCategoryModal addNewCategory={this.addNewCategory}/>
 
