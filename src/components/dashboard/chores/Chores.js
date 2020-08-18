@@ -1,18 +1,28 @@
 import React, { Component } from 'react';
 import '../chores/chores.css';
+import M from "materialize-css";
+import ChoreModal from './choreModal/ChoreModal';
 
 class Chores extends Component {
     state = {
         detailsBool: false
     }
-
     user = JSON.parse(localStorage.getItem('user'));
 
-    handleChoreClick(event, chore) {
+
+    handleChoreClick(event, modal, chore) {
         event.preventDefault();
+        //Open chore detail/edit modal
+        let elem = document.querySelector(modal);
+        M.Modal.init(elem, {});
+        let instance = M.Modal.getInstance(elem);
+
+        instance.open();
 
         console.log(chore);
         this.setState({ detailsBool: !this.state.detailsBool });
+        
+
     }
 
     render() {
@@ -20,8 +30,22 @@ class Chores extends Component {
             <div className="choreList col s5 offset-s2">
             <ul>
                 {this.props.chores.map(chore => (
-                    <li key={chore.id} onClick={(e) => this.handleChoreClick(e, chore)}>
+                    <li key={chore.id} onClick={(e) => this.handleChoreClick(e, '.choreModal', chore)}>
                         <span>{chore.chore_name}</span>
+                    </li>
+                ))}
+            </ul>
+            
+            <ChoreModal />
+
+        </div>
+        )
+    }
+
+}
+
+export default Chores;
+
                         {/* <div className="choreDiv">
                             <span>{chore.chore_name}</span>
                             {this.state.detailsBool ?
@@ -38,14 +62,3 @@ class Chores extends Component {
                                 <div></div>
                             }
                         </div> */}
-
-                    </li>
-                ))}
-            </ul>
-        </div>
-        )
-    }
-
-}
-
-export default Chores;
