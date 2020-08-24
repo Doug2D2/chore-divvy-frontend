@@ -4,17 +4,10 @@
     border: 2px solid rgb(248, 245, 245);
 }
 
-.activator {
-    height: 150px; 
+.deleteChoreIcon {
+    font-size: 28px !important;
 }
 
-.choreDiv {
-    background-color: white;
-    border-radius: 4px;
-    width: 600px;
-    padding: 10px;
-}
-
-.choreDetailsHr {
-    color: lightgray;
+.choreEditForm {
+    padding: 40px;
 }

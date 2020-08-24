@@ -19,7 +19,6 @@ class Chores extends Component {
     }
     user = JSON.parse(localStorage.getItem('user'));
 
-
     handleChoreClick(event, modal, chore) {
         event.preventDefault();
         let elem = document.querySelector(modal);
@@ -50,9 +49,7 @@ class Chores extends Component {
     }
 
     handleDifficultyChange = (event) => {
-        let elem = document.querySelector('.difficulty');
-        var instances = M.FormSelect.init(elem);
-        instances.getSelectedValues();
+
     }
 
     render() {
@@ -68,31 +65,69 @@ class Chores extends Component {
             
             <div id="modal1" className="modal choreModal modal-fixed-footer">
             <div className="modal-content">
-                <div className='row'>
-                <input placeholder='Chore Name' type="text" name="choreName" id="choreName" 
-                    value={this.state.currentChore.choreName}
-                    onChange={this.handleChoreNameChange}
-                    required/>
+                <div className='row choreEditForm'>
+                    <input placeholder='Chore Name' type="text" name="choreName" id="choreName" 
+                        value={this.state.currentChore.choreName}
+                        onChange={this.handleChoreNameChange}
+                        required/>
                     <label htmlFor='choreName'>Chore Name</label>
 
-                    <div className="input-field difficulty col s12">
-                        <select>
-                            <option value="" disabled selected>Choose your option</option>
+                    <div className="input-field difficulty">
+                        <select className='browser-default'>
+                            <option value="" disabled>Choose your option</option>
                             <option value="Easy">Easy</option>
                             <option value="Medium">Medium</option>
                             <option value="Hard">Hard</option>
                         </select>
-                        <label>Difficulty</label>
+                        <div>
+                            <label>Difficulty</label>
+                        </div>
                     </div>
-                    <br />
-                    <label for="cars">Choose a car:</label>
-                        <select name="cars" id="cars">
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                        <option value="mercedes">Mercedes</option>
-                        <option value="audi">Audi</option>
-                        </select> 
 
+                    <div className="input-field category">
+                        <select className='browser-default'>
+                            <option value="" disabled>Choose your option</option>
+                        </select>
+                        <div>
+                            <label>Category</label>
+                        </div>
+                    </div>
+
+                    <div className="input-field frequency">
+                        <select className='browser-default'>
+                            <option value="" disabled selected>Choose your option</option>
+                            <option value="Daily">Daily</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="Bi-Weekly">Bi-Weekly</option>
+                            <option value="Monthly">Monthly</option>
+                            <option value="Quarterly">Quarterly</option>
+                            <option value="Yearly">Yearly</option>
+                        </select>
+                        <div>
+                            <label>Frequency</label>
+                        </div>
+                    </div>
+
+                    <div className="input-field status">
+                        <select className='browser-default'>
+                            <option value="" disabled>Choose your option</option>
+                            <option value="To Do">To Do</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                        <div>
+                            <label>Status</label>
+                        </div>
+                    </div>
+
+                    <textarea>
+                        {/* text area for notes */}
+                    </textarea>
+                    <label>Notes</label>
+
+                    <button className="btn left red"><i className="material-icons deleteChoreIcon">delete</i></button>
+                    <button className="btn right">Save</button>
+                        
                 </div>
             </div>
         </div>
