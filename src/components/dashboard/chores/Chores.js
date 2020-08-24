@@ -5,17 +5,15 @@ import M from "materialize-css";
 class Chores extends Component {
     state = {
         detailsBool: false,
-        currentChore: {
-            assigneeId: '',
-            categoryId: '',
-            choreName: '',
-            dateComplete: '',
-            difficulty: '',
-            frequencyId: '',
-            id: '',
-            notes: '',
-            status: ''
-        }
+        choreAssignee: '',
+        choreCategoryId: '',
+        choreName: '',
+        choreDateComplete: '',
+        choreDifficulty: '',
+        choreFreqId: '',
+        choreId: '',
+        choreNotes: '',
+        choreStatus: ''
     }
     user = JSON.parse(localStorage.getItem('user'));
 
@@ -25,17 +23,16 @@ class Chores extends Component {
 
         console.log(chore);
 
-        this.setState({ currentChore: {
-            assigneeId: chore.assignee_id,
-            categoryId: chore.category_id,
+        this.setState({ 
+            choreAssignee: chore.assignee_id,
+            choreCategoryId: chore.category_id,
             choreName: chore.chore_name,
-            dateComplete: chore.date_complete,
-            difficulty: chore.difficulty,
-            frequencyId: chore.frequency_id,
-            id: chore.id,
-            notes: chore.notes,
-            status: chore.status
-            },
+            choreDateComplete: chore.date_complete,
+            choreDifficulty: chore.difficulty,
+            choreFreqId: chore.frequency_id,
+            choreId: chore.id,
+            choreNotes: chore.notes,
+            choreStatus: chore.status,
             detailsBool: !this.state.detailsBool
         });
 
@@ -45,11 +42,11 @@ class Chores extends Component {
     }
 
     handleChoreNameChange = (event) => {
-        this.setState({ currentChore: { choreName: event.target.value }});
+        this.setState({ choreName: event.target.value });
     }
 
     handleDifficultyChange = (event) => {
-
+        this.setState({ choreDifficulty: event.target.value });
     }
 
     render() {
@@ -67,13 +64,13 @@ class Chores extends Component {
             <div className="modal-content">
                 <div className='row choreEditForm'>
                     <input placeholder='Chore Name' type="text" name="choreName" id="choreName" 
-                        value={this.state.currentChore.choreName}
+                        defaultValue={this.state.choreName}
                         onChange={this.handleChoreNameChange}
                         required/>
                     <label htmlFor='choreName'>Chore Name</label>
 
                     <div className="input-field difficulty">
-                        <select className='browser-default'>
+                        <select className='browser-default' value={this.state.choreDifficulty} onChange={this.handleDifficultyChange}>
                             <option value="" disabled>Choose your option</option>
                             <option value="Easy">Easy</option>
                             <option value="Medium">Medium</option>
@@ -95,7 +92,7 @@ class Chores extends Component {
 
                     <div className="input-field frequency">
                         <select className='browser-default'>
-                            <option value="" disabled selected>Choose your option</option>
+                            <option value="" disabled value>Choose your option</option>
                             <option value="Daily">Daily</option>
                             <option value="Weekly">Weekly</option>
                             <option value="Bi-Weekly">Bi-Weekly</option>
