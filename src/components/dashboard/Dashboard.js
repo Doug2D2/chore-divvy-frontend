@@ -23,7 +23,7 @@ class Dashboard extends Component {
         this.getCategories();
     }
 
-    getChores() {
+    getChores = () => {
         if(this.categoryId) {
             fetch(`${baseUrl}/get-chores-by-categoryId/${this.categoryId}`)
             .then(res => {
@@ -246,7 +246,7 @@ class Dashboard extends Component {
                 handleCategoryClick={this.handleCategoryClick}
                 handleOpenModal={this.handleOpenModal}
                 handleDeleteCategory={this.handleDeleteCategory}/>
-                <Chores chores={this.state.chores}/>
+                <Chores chores={this.state.chores} getChores={this.getChores}/>
                 <AddCategoryModal addNewCategory={this.addNewCategory}/>
 
                 <div id="modal1" className="modal editModal modal-fixed-footer">
