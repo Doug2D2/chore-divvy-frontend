@@ -95,23 +95,73 @@ class Chores extends Component {
         this.setState({ choreAssigneeUsername: event.target.value });
     }
 
-    handleSaveEditChore() {
-        console.log('save');
+    handleSaveEditChore(event, choreId, choreName, choreStatus, choreFreqId, choreCatId, choreAssigneeUsername, choreDifficulty, choreNotes) {
+        event.preventDefault();
+        let assigneeId = null;
+        
+        if(choreName && choreStatus && choreCatId) {
+            if(choreAssigneeUsername) {
+                fetch(`${baseUrl}/get-users`)
+                .then(res => {
+                    return res.json();
+                })
+                .then(users => {
+    
+                    users.map(user => {
+                        if(user.username === choreAssigneeUsername) {
+                            assigneeId = user.id;
+                        }
+                    })
+    
+                    fetch(`${baseUrl}/update-chore/${choreId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            choreName: choreName,
+                            status: choreStatus,
+                            frequencyId: choreFreqId,
+                            categoryId: choreCatId,
+                            assigneeId: assigneeId,
+                            difficulty: choreDifficulty,
+                            notes: choreNotes
+                        })
+                    })
+                    .then(res => {
+                        this.props.getChores();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+    
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+            }
+        }
+
+        this.handleCloseChoreModal();
     }
     
-    handleDeleteChore(event, modal, id, getChores) {
+    handleDeleteChore(event,  id) {
         event.preventDefault();
-        let elem = document.querySelector(modal);
         fetch(`${baseUrl}/delete-chore/${id}`, {
             method: 'DELETE'
         })
         .then(res => {
-            getChores();
+            this.props.getChores();
         })
         .catch(err => {
             console.log(err);
         });
-        
+
+        this.handleCloseChoreModal();
+    }
+
+    handleCloseChoreModal() {
+        let elem = document.querySelector('.choreModal');
         M.Modal.init(elem, {});
         let instance = M.Modal.getInstance(elem);
         instance.close();
@@ -144,16 +194,18 @@ class Chores extends Component {
     }
 
     getUserById(assigneeId) {
-        fetch(`${baseUrl}/get-user/${assigneeId}`)
-        .then(res => {
-            return res.json();
-        })
-        .then(user => {
-            this.setState({ choreAssigneeUsername: user[0].username });
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        if(assigneeId) {
+            fetch(`${baseUrl}/get-user/${assigneeId}`)
+            .then(res => {
+                return res.json();
+            })
+            .then(user => {
+                this.setState({ choreAssigneeUsername: user[0].username });
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }
     }
 
     render() {
@@ -169,13 +221,19 @@ class Chores extends Component {
             
             <div id="modal1" className="modal choreModal modal-fixed-footer">
             <div className="modal-content">
+
+                <i className="material-icons right"
+                onClick={this.handleCloseChoreModal}
+                >close</i>
+
                 <div className='row choreEditForm'>
 
                     <input placeholder='Chore Name' type="text" name="choreName" id="choreName" 
+                        className={!this.state.choreName ? "choreNameInvalid" : "choreName"}
                         value={this.state.choreName}
                         onChange={this.handleChoreNameChange}
                         required/>
-                    <label htmlFor='choreName'>Chore Name</label>
+                    <label htmlFor='choreName' className={!this.state.choreName? "choreNameLabelRequired" : "choreNameLabel"}>Chore Name (Required)</label>
 
                     <div className="input-field status">
                         <select className='browser-default' value={this.state.choreStatus} onChange={this.handleStatusChange}>
@@ -185,7 +243,7 @@ class Chores extends Component {
                             <option value="Completed">Completed</option>
                         </select>
                         <div>
-                            <label>Status</label>
+                            <label>Status (Required)</label>
                         </div>
                     </div>
 
@@ -193,6 +251,7 @@ class Chores extends Component {
                         value={this.state.choreAssigneeUsername}
                         onChange={this.handleAssigneeChange}
                     />
+                    <label htmlFor='choreAssignee'>Assigned To (User's Email)</label>
 
                     <div className="input-field frequency">
                         <select className='browser-default' value={this.state.choreFreqId} onChange={this.handleFrequencyChange}>
@@ -214,7 +273,7 @@ class Chores extends Component {
                             ))}
                         </select>
                         <div>
-                            <label>Category</label>
+                            <label>Category (Required)</label>
                         </div>
                     </div>
 
@@ -234,27 +293,16 @@ class Chores extends Component {
                     <label>Notes</label>
 
                     <button className="btn left red" 
-                        onClick={(e) => this.handleDeleteChore(e, '.choreModal', this.currentChore.id, this.props.getChores)}>
+                        onClick={(e) => this.handleDeleteChore(e, this.currentChore.id)}>
                             <i className="material-icons deleteChoreIcon">delete</i>
                     </button>
 
-                    <button className="btn right" 
-                        onClick={this.handleSaveEditChore}>
+                    <button className={!this.state.choreName ? "btn right disabled" : "btn right"} 
+                        onClick={(e) => this.handleSaveEditChore(e, this.currentChore.id, this.state.choreName, 
+                        this.state.choreStatus, this.state.choreFreqId, this.state.choreCategoryId, 
+                        this.state.choreAssigneeUsername,this.state.choreDifficulty, this.state.choreNotes)}>
                             Save
                     </button>  
-
-                    {/* <ChoreModalButtons 
-                        currentChore={this.currentChore}
-                        choreAssigneeUsername={this.state.choreAssigneeUsername}
-                        choreCategoryId={this.state.choreCategoryId}
-                        choreName={this.state.choreName}
-                        choreDateComplete={this.state.choreDateComplete}
-                        choreDifficulty={this.state.choreDifficulty}
-                        choreFreqId={this.state.choreFreqId}
-                        choreNotes={this.state.choreNotes}
-                        choreStatus={this.state.choreStatus}
-                    /> */}
-
                 </div>
             </div>
         </div>
