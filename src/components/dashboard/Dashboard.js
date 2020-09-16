@@ -26,9 +26,7 @@ class Dashboard extends Component {
     getChores = () => {
         if(this.categoryId) {
             fetch(`${baseUrl}/get-chores-by-categoryId/${this.categoryId}`)
-            .then(res => {
-                return res.json();
-            })
+            .then(res => res.json())
             .then(data => {
                 this.setState({ chores: data });
             })
@@ -41,9 +39,7 @@ class Dashboard extends Component {
     getCategories() {
         if(this.user) {
             fetch(`${baseUrl}/get-categories-by-userId/${this.user.userId}`)
-            .then(res => {
-                return res.json();
-            })
+            .then(res => res.json())
             .then(data => {
                 this.categoryId = localStorage.getItem('categoryId');
                 if(!this.categoryId) {
@@ -72,9 +68,7 @@ class Dashboard extends Component {
         let currUserId = this.user.userId;
         if(category) {
             fetch(`${baseUrl}/get-users`)
-            .then(res => {
-                return res.json();
-            })
+            .then(res => res.json())
             .then(usersTable => {
                 for(let x = 0; x < category.user_id.length; x++) {
                     for(let y = 0; y < usersTable.length; y++) {
@@ -125,9 +119,7 @@ class Dashboard extends Component {
                 userIds: userIdArr
             })
         }) 
-        .then(res => {
-            return res.json();
-        })
+        .then(res => res.json())
         .then(newCategoryData => {
             localStorage.setItem('categoryId', newCategoryData.id);
             this.getCategories();
@@ -191,12 +183,10 @@ class Dashboard extends Component {
         }
 
         if(categoryName !== catStatesName || users !== catStatesUsernames) {
-            let userIdArr = this.user.userId;
+            let userIdArr = [this.user.userId];
             if(users.length > 0) {
                 fetch(`${baseUrl}/get-users`)
-                .then(res => {
-                    return res.json();
-                })
+                .then(res => res.json())
                 .then(userTable => {
                     for(let x = 0; x < users.length; x++) {
                         for(let y = 0; y < userTable.length; y++) {

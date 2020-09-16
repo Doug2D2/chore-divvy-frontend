@@ -33,29 +33,20 @@ class Chores extends Component {
         this.currentChore = chore; 
 
         if(!chore.notes) {
-            this.setState({ 
-                choreCategoryId: chore.category_id,
-                choreName: chore.chore_name,
-                choreDateComplete: chore.date_complete,
-                choreDifficulty: chore.difficulty,
-                choreFreqId: chore.frequency_id,
-                choreNotes: '',
-                choreStatus: chore.status,
-                detailsBool: !this.state.detailsBool
-            });
-        } else {
-            this.setState({ 
-                choreCategoryId: chore.category_id,
-                choreName: chore.chore_name,
-                choreDateComplete: chore.date_complete,
-                choreDifficulty: chore.difficulty,
-                choreFreqId: chore.frequency_id,
-                choreNotes: chore.notes,
-                choreStatus: chore.status,
-                detailsBool: !this.state.detailsBool
-            });
+            this.setState({ choreNotes: ''});
         }
 
+        this.setState({ 
+            choreCategoryId: chore.category_id,
+            choreName: chore.chore_name,
+            choreDateComplete: chore.date_complete,
+            choreDifficulty: chore.difficulty,
+            choreFreqId: chore.frequency_id,
+            choreNotes: chore.notes,
+            choreStatus: chore.status,
+            detailsBool: !this.state.detailsBool
+        });
+        
         M.Modal.init(elem, {});
         let instance = M.Modal.getInstance(elem);
         instance.open();
@@ -83,8 +74,9 @@ class Chores extends Component {
                 choreStatus: event.target.value,
                 choreDateComplete: new Date()
             })
+        } else {
+            this.setState({ choreStatus: event.target.value });
         }
-        this.setState({ choreStatus: event.target.value });
     }
 
     handleNoteChange = (event) => {
@@ -102,16 +94,15 @@ class Chores extends Component {
         if(choreName && choreStatus && choreCatId) {
             if(choreAssigneeUsername) {
                 fetch(`${baseUrl}/get-users`)
-                .then(res => {
-                    return res.json();
-                })
+                .then(res => res.json())
                 .then(users => {
-    
-                    users.map(user => {
-                        if(user.username === choreAssigneeUsername) {
-                            assigneeId = user.id;
+                    
+                    for(let x = 0; x < users.length; x++) {
+                        if(users[x].username === choreAssigneeUsername) {
+                            assigneeId = users[x].id;
+                            break;
                         }
-                    })
+                    }
     
                     fetch(`${baseUrl}/update-chore/${choreId}`, {
                         method: 'PUT',
@@ -169,9 +160,7 @@ class Chores extends Component {
 
     getUsersCategories() {
         fetch(`${baseUrl}/get-categories-by-userId/${this.user.userId}`)
-        .then(res => {
-            return res.json();
-        })
+        .then(res => res.json())
         .then(currentUsersCategories => {
             this.usersCategories = currentUsersCategories;
         })
@@ -182,9 +171,7 @@ class Chores extends Component {
 
     getFrequencies() {
         fetch(`${baseUrl}/get-frequencies`)
-        .then(res => {
-            return res.json();
-        })
+        .then(res => res.json())
         .then(frequencies => {
             this.frequencies = frequencies;
         })
@@ -196,11 +183,11 @@ class Chores extends Component {
     getUserById(assigneeId) {
         if(assigneeId) {
             fetch(`${baseUrl}/get-user/${assigneeId}`)
-            .then(res => {
-                return res.json();
-            })
+            .then(res => res.json())
             .then(user => {
-                this.setState({ choreAssigneeUsername: user[0].username });
+                if(user.length > 0) {
+                    this.setState({ choreAssigneeUsername: user[0].username });
+                }
             })
             .catch(err => {
                 console.log(err);
