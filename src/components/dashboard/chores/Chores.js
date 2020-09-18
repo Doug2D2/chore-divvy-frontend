@@ -33,7 +33,7 @@ class Chores extends Component {
         this.currentChore = chore; 
 
         if(!chore.notes) {
-            this.setState({ choreNotes: ''});
+            chore.notes = '';
         }
 
         this.setState({ 
