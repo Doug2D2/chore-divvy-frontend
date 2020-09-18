@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SideMenuBar from '../sideMenuBar/SideMenuBar';
 import AddCategoryModal from './addCategoryModal/AddCategoryModal';
+import Chores from './chores/Chores';
 import M from "materialize-css";
 import { Redirect } from 'react-router-dom';
 import '../dashboard/dashboard.css';
@@ -22,12 +23,10 @@ class Dashboard extends Component {
         this.getCategories();
     }
 
-    getChores() {
+    getChores = () => {
         if(this.categoryId) {
             fetch(`${baseUrl}/get-chores-by-categoryId/${this.categoryId}`)
-            .then(res => {
-                return res.json();
-            })
+            .then(res => res.json())
             .then(data => {
                 this.setState({ chores: data });
             })
@@ -40,9 +39,7 @@ class Dashboard extends Component {
     getCategories() {
         if(this.user) {
             fetch(`${baseUrl}/get-categories-by-userId/${this.user.userId}`)
-            .then(res => {
-                return res.json();
-            })
+            .then(res => res.json())
             .then(data => {
                 this.categoryId = localStorage.getItem('categoryId');
                 if(!this.categoryId) {
@@ -68,12 +65,10 @@ class Dashboard extends Component {
     updateUsersIdToEmail(category){
         localStorage.setItem('editCategoryId', category.id);
         let usernameArr = [];
-        let currUserId = JSON.parse(localStorage.getItem('user')).userId;
+        let currUserId = this.user.userId;
         if(category) {
             fetch(`${baseUrl}/get-users`)
-            .then(res => {
-                return res.json();
-            })
+            .then(res => res.json())
             .then(usersTable => {
                 for(let x = 0; x < category.user_id.length; x++) {
                     for(let y = 0; y < usersTable.length; y++) {
@@ -124,9 +119,7 @@ class Dashboard extends Component {
                 userIds: userIdArr
             })
         }) 
-        .then(res => {
-            return res.json();
-        })
+        .then(res => res.json())
         .then(newCategoryData => {
             localStorage.setItem('categoryId', newCategoryData.id);
             this.getCategories();
@@ -190,12 +183,10 @@ class Dashboard extends Component {
         }
 
         if(categoryName !== catStatesName || users !== catStatesUsernames) {
-            let userIdArr = [JSON.parse(localStorage.getItem('user')).userId];
+            let userIdArr = [this.user.userId];
             if(users.length > 0) {
                 fetch(`${baseUrl}/get-users`)
-                .then(res => {
-                    return res.json();
-                })
+                .then(res => res.json())
                 .then(userTable => {
                     for(let x = 0; x < users.length; x++) {
                         for(let y = 0; y < userTable.length; y++) {
@@ -245,65 +236,54 @@ class Dashboard extends Component {
                 handleCategoryClick={this.handleCategoryClick}
                 handleOpenModal={this.handleOpenModal}
                 handleDeleteCategory={this.handleDeleteCategory}/>
-
-                <div className="col s8">
-                    <ul>
-                        {this.state.chores.map(chore => (
-                            <li key={chore.id}>{chore.chore_name}</li>
-                        ))}
-                    </ul>
-                </div>
-
+                <Chores chores={this.state.chores} getChores={this.getChores} users={this.state.users}/>
                 <AddCategoryModal addNewCategory={this.addNewCategory}/>
 
                 <div id="modal1" className="modal editModal modal-fixed-footer">
-                <div className="modal-content">
-                    <div className='row'>
-                        <div className='col s8 offset-s2'>
-                            <input type="text" name="categoryName" id="categoryName" 
-                            value={this.state.categoryName}
-                            onChange={this.handleCategoryNameInputEdit}
-                            required/>
-                            <label htmlFor='categoryName'>Category Name</label>
-                        </div>
-
-                        {this.state.users 
-                        ? 
-                            this.state.users.map((username, index) => (
-                                <div className='row' key={index}>
-                                 <div className='col s7 offset-s2' id='editUserInputDiv'>
-                                    <input placeholder={username} type="text" name="userName" id={`userName_${index}`} 
-                                    value={username}
-                                    onChange={(e) => {this.handleCategoryUsernameInputEdit(e, index)}}
-                                    />
-                                    <label htmlFor='userName'>Username</label>
-                                </div>
-                                <button type='submit' className='btn-floating col s1 red' id='removeUserInEditBtn'
-                                onClick={(e) => {this.handleRemoveUserInEdit(e, index)}}
-                                >
-                                    <i className="material-icons left">remove</i>
-                                </button> 
+                    <div className="modal-content">
+                        <div className='row'>
+                            <div className='col s8 offset-s2'>
+                                <input type="text" name="categoryName" id="categoryName" 
+                                value={this.state.categoryName}
+                                onChange={this.handleCategoryNameInputEdit}
+                                required/>
+                                <label htmlFor='categoryName'>Category Name</label>
                             </div>
-                            ))
-                        : 
-                            <div></div>
-                        }
-                        
-                        <div className='col s8 offset-s2'>
-                            <button className='btn btn-large' onClick={(e) => {this.handleAddUserClickInEdit(e)}}>Add User</button>
+
+                            {this.state.users 
+                            ? 
+                                this.state.users.map((username, index) => (
+                                    <div className='row' key={index}>
+                                    <div className='col s7 offset-s2' id='editUserInputDiv'>
+                                        <input placeholder={username} type="text" name="userName" id={`userName_${index}`} 
+                                        value={username}
+                                        onChange={(e) => {this.handleCategoryUsernameInputEdit(e, index)}}
+                                        />
+                                        <label htmlFor='userName'>Username</label>
+                                    </div>
+                                    <button type='submit' className='btn-floating col s1 red' id='removeUserInEditBtn'
+                                    onClick={(e) => {this.handleRemoveUserInEdit(e, index)}}
+                                    >
+                                        <i className="material-icons left">remove</i>
+                                    </button> 
+                                </div>
+                                ))
+                            : 
+                                <div></div>
+                            }
+                            
+                            <div className='col s8 offset-s2'>
+                                <button className='btn btn-large' onClick={(e) => {this.handleAddUserClickInEdit(e)}}>Add User</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="modal-footer">
-                    <a href="#!" className="modal-close waves-effect waves-green btn-flat"
-                    onClick={(e) => {this.handleEditCategory(e, this.state.users, this.state.categoryName)}}
-                    >Save</a>
+                    <div className="modal-footer">
+                        <a href="#!" className="modal-close waves-effect waves-green btn-flat"
+                        onClick={(e) => {this.handleEditCategory(e, this.state.users, this.state.categoryName)}}
+                        >Save</a>
+                    </div>
                 </div>
             </div>
-
-            </div>
-                            
-            // </div>
         )
     }
 }
