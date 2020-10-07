@@ -197,103 +197,110 @@ class Chores extends Component {
 
     render() {
         return (
-            <div className="choreList col s5 offset-s2">
-            <ul>
-                {this.props.chores.map(chore => (
-                    <li key={chore.id} onClick={(e) => this.handleChoreClick(e, '.choreModal', chore)}>
-                        <span>{chore.chore_name}</span>
-                    </li>
-                ))}
-            </ul>
+            <div>
+                <div className="choreList col s5 offset-s2">
+                    <ul>
+                        {this.props.chores.map(chore => (
+                            <li key={chore.id} onClick={(e) => this.handleChoreClick(e, '.choreModal', chore)}>
+                                <span>{chore.chore_name}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                <button 
+                    className='btn ' 
+                    onClick={(e) => {this.props.handleOpenModal(e, '.addChoreModal')}}>
+                        <i className="material-icons">add</i>
+                </button>
             
-            <div id="modal1" className="modal choreModal modal-fixed-footer">
-            <div className="modal-content">
+                <div id="modal1" className="modal choreModal modal-fixed-footer">
+                <div className="modal-content">
 
-                <i className="material-icons right"
-                onClick={this.handleCloseChoreModal}
-                >close</i>
+                    <i className="material-icons right"
+                    onClick={this.handleCloseChoreModal}
+                    >close</i>
 
-                <div className='row choreEditForm'>
+                    <div className='row choreEditForm'>
 
-                    <input placeholder='Chore Name' type="text" name="choreName" id="choreName" 
-                        className={!this.state.choreName ? "choreNameInvalid" : "choreName"}
-                        value={this.state.choreName}
-                        onChange={this.handleChoreNameChange}
-                        required/>
-                    <label htmlFor='choreName' className={!this.state.choreName? "choreNameLabelRequired" : "choreNameLabel"}>Chore Name (Required)</label>
+                        <input placeholder='Chore Name' type="text" name="choreName" id="choreName" 
+                            className={!this.state.choreName ? "choreNameInvalid" : "choreName"}
+                            value={this.state.choreName}
+                            onChange={this.handleChoreNameChange}
+                            required/>
+                        <label htmlFor='choreName' className={!this.state.choreName? "choreNameLabelRequired" : "choreNameLabel"}>Chore Name (Required)</label>
 
-                    <div className="input-field status">
-                        <select className='browser-default' value={this.state.choreStatus} onChange={this.handleStatusChange}>
-                            <option value="" disabled>Choose your option</option>
-                            <option value="To Do">To Do</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Completed">Completed</option>
-                        </select>
-                        <div>
-                            <label>Status (Required)</label>
+                        <div className="input-field status">
+                            <select className='browser-default' value={this.state.choreStatus} onChange={this.handleStatusChange}>
+                                <option value="" disabled>Choose your option</option>
+                                <option value="To Do">To Do</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                            <div>
+                                <label>Status (Required)</label>
+                            </div>
                         </div>
-                    </div>
 
-                    <input placeholder="Assigned To (User's Email)" type='text' name='choreAssignee' id='choreAssignee'
-                        value={this.state.choreAssigneeUsername}
-                        onChange={this.handleAssigneeChange}
-                    />
-                    <label htmlFor='choreAssignee'>Assigned To (User's Email)</label>
+                        <input placeholder="Assigned To (User's Email)" type='text' name='choreAssignee' id='choreAssignee'
+                            value={this.state.choreAssigneeUsername}
+                            onChange={this.handleAssigneeChange}
+                        />
+                        <label htmlFor='choreAssignee'>Assigned To (User's Email)</label>
 
-                    <div className="input-field frequency">
-                        <select className='browser-default' value={this.state.choreFreqId} onChange={this.handleFrequencyChange}>
-                            <option value="" disabled>Choose your option</option>
-                            {this.frequencies.map(freq => (
-                                <option key={freq.id} value={freq.id}>{freq.frequency_name}</option>
-                            ))}
-                        </select>
-                        <div>
-                            <label>Frequency</label>
+                        <div className="input-field frequency">
+                            <select className='browser-default' value={this.state.choreFreqId} onChange={this.handleFrequencyChange}>
+                                <option value="" disabled>Choose your option</option>
+                                {this.frequencies.map(freq => (
+                                    <option key={freq.id} value={freq.id}>{freq.frequency_name}</option>
+                                ))}
+                            </select>
+                            <div>
+                                <label>Frequency</label>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="input-field category">
-                        <select className='browser-default' value={this.state.choreCategoryId} onChange={this.handleCategoryChange}>
-                            <option value="" disabled>Choose your option</option>
-                            {this.usersCategories.map(category => (
-                                <option key={category.id} value={category.id}>{category.category_name}</option>
-                            ))}
-                        </select>
-                        <div>
-                            <label>Category (Required)</label>
+                        <div className="input-field category">
+                            <select className='browser-default' value={this.state.choreCategoryId} onChange={this.handleCategoryChange}>
+                                <option value="" disabled>Choose your option</option>
+                                {this.usersCategories.map(category => (
+                                    <option key={category.id} value={category.id}>{category.category_name}</option>
+                                ))}
+                            </select>
+                            <div>
+                                <label>Category (Required)</label>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="input-field difficulty">
-                        <select className='browser-default' value={this.state.choreDifficulty} onChange={this.handleDifficultyChange}>
-                            <option value="" disabled>Choose your option</option>
-                            <option value="Easy">Easy</option>
-                            <option value="Medium">Medium</option>
-                            <option value="Hard">Hard</option>
-                        </select>
-                        <div>
-                            <label>Difficulty</label>
+                        <div className="input-field difficulty">
+                            <select className='browser-default' value={this.state.choreDifficulty} onChange={this.handleDifficultyChange}>
+                                <option value="" disabled>Choose your option</option>
+                                <option value="Easy">Easy</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Hard">Hard</option>
+                            </select>
+                            <div>
+                                <label>Difficulty</label>
+                            </div>
                         </div>
+
+                        <textarea value={this.state.choreNotes} onChange={this.handleNoteChange}></textarea>
+                        <label>Notes</label>
+
+                        <button className="btn left red" 
+                            onClick={(e) => this.handleDeleteChore(e, this.currentChore.id)}>
+                                <i className="material-icons deleteChoreIcon">delete</i>
+                        </button>
+
+                        <button className={!this.state.choreName ? "btn right disabled" : "btn right"} 
+                            onClick={(e) => this.handleSaveEditChore(e, this.currentChore.id, this.state.choreName, 
+                            this.state.choreStatus, this.state.choreFreqId, this.state.choreCategoryId, 
+                            this.state.choreAssigneeUsername,this.state.choreDifficulty, this.state.choreNotes)}>
+                                Save
+                        </button>  
                     </div>
-
-                    <textarea value={this.state.choreNotes} onChange={this.handleNoteChange}></textarea>
-                    <label>Notes</label>
-
-                    <button className="btn left red" 
-                        onClick={(e) => this.handleDeleteChore(e, this.currentChore.id)}>
-                            <i className="material-icons deleteChoreIcon">delete</i>
-                    </button>
-
-                    <button className={!this.state.choreName ? "btn right disabled" : "btn right"} 
-                        onClick={(e) => this.handleSaveEditChore(e, this.currentChore.id, this.state.choreName, 
-                        this.state.choreStatus, this.state.choreFreqId, this.state.choreCategoryId, 
-                        this.state.choreAssigneeUsername,this.state.choreDifficulty, this.state.choreNotes)}>
-                            Save
-                    </button>  
                 </div>
             </div>
-        </div>
-
         </div>
         )
     }

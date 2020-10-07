@@ -5,8 +5,12 @@ class addChoreModal extends Component{
 
     render() {
         return (
-            <div>
-                <h1>add chore modal working</h1>
+            <div id="modal1" className="modal addChoreModal modal-fixed-footer">
+                <div className="modal-content">
+                    <div className='row'>
+                        <h1>addChoreModal</h1>
+                    </div>
+                </div>
             </div>
         )
     }

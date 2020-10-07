@@ -237,9 +237,10 @@ class Dashboard extends Component {
                 handleCategoryClick={this.handleCategoryClick}
                 handleOpenModal={this.handleOpenModal}
                 handleDeleteCategory={this.handleDeleteCategory}/>
-                <Chores chores={this.state.chores} getChores={this.getChores} users={this.state.users}/>
-                <AddChoreModal />
+                <Chores chores={this.state.chores} getChores={this.getChores} users={this.state.users}
+                handleOpenModal={this.handleOpenModal}/>
                 <AddCategoryModal addNewCategory={this.addNewCategory}/>
+                <AddChoreModal />
 
                 <div id="modal1" className="modal editModal modal-fixed-footer">
                     <div className="modal-content">
