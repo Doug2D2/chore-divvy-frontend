@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SideMenuBar from '../sideMenuBar/SideMenuBar';
 import AddCategoryModal from './addCategoryModal/AddCategoryModal';
 import Chores from './chores/Chores';
+import AddChoreModal from './addChoreModal/AddChoreModal';
 import M from "materialize-css";
 import { Redirect } from 'react-router-dom';
 import '../dashboard/dashboard.css';
@@ -237,6 +238,7 @@ class Dashboard extends Component {
                 handleOpenModal={this.handleOpenModal}
                 handleDeleteCategory={this.handleDeleteCategory}/>
                 <Chores chores={this.state.chores} getChores={this.getChores} users={this.state.users}/>
+                <AddChoreModal />
                 <AddCategoryModal addNewCategory={this.addNewCategory}/>
 
                 <div id="modal1" className="modal editModal modal-fixed-footer">
