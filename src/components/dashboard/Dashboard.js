@@ -12,8 +12,10 @@ class Dashboard extends Component {
         categories: [],
         chores: [],
         categoryName: '',
-        users: []
+        users: [],
+        editSaveBtn: true
     }
+    OGCategoryName = '';
 
     componentDidMount() {
         this.user = JSON.parse(localStorage.getItem('user'));
@@ -98,8 +100,9 @@ class Dashboard extends Component {
                     this.updateUsersIdToEmail(category);
                 }
             }
+            this.setState({ editSaveBtn: true });
+            this.OGCategoryName = category.category_name;
         }
-
         let elem = document.querySelector(modal);
         M.Modal.init(elem, {});
         let instance = M.Modal.getInstance(elem);
@@ -146,13 +149,13 @@ class Dashboard extends Component {
     }
 
     handleCategoryNameInputEdit = (event) => {
-        this.setState({ categoryName: event.target.value });
+        this.setState({ categoryName: event.target.value, editSaveBtn: false });
     }
 
     handleCategoryUsernameInputEdit = (event, usernameIndex) => {
         let tempUsers = this.state.users;
         tempUsers[usernameIndex] = event.target.value
-        this.setState({ users: tempUsers });
+        this.setState({ users: tempUsers, editSaveBtn: false });
     }
 
     handleRemoveUserInEdit = (event, index) => {
@@ -169,59 +172,49 @@ class Dashboard extends Component {
         this.setState({ users: tempArr })
     }
 
-    handleEditCategory = (event, users, categoryName) => {
+    handleEditCategory = async (event, users, categoryName) => {
         event.preventDefault();
 
         let editCategoryId = JSON.parse(localStorage.getItem('editCategoryId'));
-        let catStatesUsernames = [];
-        let catStatesName = '';
-        for(let i = 0; i < this.state.categories.length; i++) {
-            if(editCategoryId === this.state.categories[i].id) {
-                catStatesUsernames = this.state.categories[i].username;
-                catStatesName = this.state.categories[i].category_name;
+        let userIdArr = [this.user.userId];
+
+        if(users.length > 0) {
+            let res = await fetch(`${baseUrl}/get-users`);
+            let userTable = await res.json();
+            console.log(userTable);
+            for(let x = 0; x < users.length; x++) {
+                for(let y = 0; y < userTable.length; y++) {
+                    if(users[x].toLowerCase() === userTable[y].username.toLowerCase()) {
+                        userIdArr.push(userTable[y].id);
+                    } 
+                }
             }
+            // removes any duplicates in array
+            userIdArr = [...new Set(userIdArr)];
         }
 
-        if(categoryName !== catStatesName || users !== catStatesUsernames) {
-            let userIdArr = [this.user.userId];
-            if(users.length > 0) {
-                fetch(`${baseUrl}/get-users`)
-                .then(res => res.json())
-                .then(userTable => {
-                    for(let x = 0; x < users.length; x++) {
-                        for(let y = 0; y < userTable.length; y++) {
-                            if(users[x].toLowerCase() === userTable[y].username.toLowerCase()) {
-                                userIdArr.push(userTable[y].id);
-                            } 
-                        }
-                    }
-                    // removes any duplicates in array
-                    userIdArr = [...new Set(userIdArr)];
-                    fetch(`${baseUrl}/update-category/${editCategoryId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            categoryName: categoryName,
-                            userIds: userIdArr
-                        })
-                    })
-                    .then(res => {
-                        this.getCategories();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    })
-                    this.setState({ 
-                        categoryName: categoryName,
-                        users: userIdArr
-                    });
+        if(this.OGCategoryName !== categoryName) {
+            fetch(`${baseUrl}/update-category/${editCategoryId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    categoryName: categoryName,
+                    userIds: userIdArr
                 })
-                .catch(err => {
-                    console.log(err);
+            })
+            .then(res => {
+                this.getCategories();
+                this.setState({ 
+                    categoryName: categoryName,
+                    users: userIdArr,
+                    editSaveBtn: true
                 });
-            }
+            })
+            .catch(err => {
+                console.log(err);
+            })
         }
     }
 
@@ -280,7 +273,7 @@ class Dashboard extends Component {
                     <div className="modal-footer">
                         <a href="#!" className="modal-close waves-effect waves-green btn-flat"
                         onClick={(e) => {this.handleEditCategory(e, this.state.users, this.state.categoryName)}}
-                        >Save</a>
+                        disabled={this.state.editSaveBtn}>Save</a>
                     </div>
                 </div>
             </div>
