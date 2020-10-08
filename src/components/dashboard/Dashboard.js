@@ -13,9 +13,10 @@ class Dashboard extends Component {
         chores: [],
         categoryName: '',
         users: [],
-        editSaveBtn: true
+        editSaveBtnDisabled: true
     }
     OGCategoryName = '';
+    OGUsers = [];
 
     componentDidMount() {
         this.user = JSON.parse(localStorage.getItem('user'));
@@ -100,8 +101,9 @@ class Dashboard extends Component {
                     this.updateUsersIdToEmail(category);
                 }
             }
-            this.setState({ editSaveBtn: true });
+            this.setState({ editSaveBtnDisabled: true });
             this.OGCategoryName = category.category_name;
+            this.OGUsers = [category.user_id].sort();
         }
         let elem = document.querySelector(modal);
         M.Modal.init(elem, {});
@@ -149,20 +151,20 @@ class Dashboard extends Component {
     }
 
     handleCategoryNameInputEdit = (event) => {
-        this.setState({ categoryName: event.target.value, editSaveBtn: false });
+        this.setState({ categoryName: event.target.value, editSaveBtnDisabled: false });
     }
 
     handleCategoryUsernameInputEdit = (event, usernameIndex) => {
         let tempUsers = this.state.users;
         tempUsers[usernameIndex] = event.target.value
-        this.setState({ users: tempUsers, editSaveBtn: false });
+        this.setState({ users: tempUsers, editSaveBtnDisabled: false });
     }
 
     handleRemoveUserInEdit = (event, index) => {
         event.preventDefault();
         let tempArr = this.state.users;
         tempArr.splice(index, 1);
-        this.setState({ users: tempArr });
+        this.setState({ users: tempArr, editSaveBtnDisabled: false });
     }
 
     handleAddUserClickInEdit = (event) => {
@@ -170,6 +172,18 @@ class Dashboard extends Component {
         let tempArr = this.state.users;
         tempArr.push("");
         this.setState({ users: tempArr })
+    }
+
+    isUserArrayNotEqual(editedUserArr) {
+        if(this.OGUsers.length !== editedUserArr.length) {
+            return true;
+        } 
+        for(let x = 0; x < editedUserArr.length; x++) {
+            if(this.OGUsers[x] !== editedUserArr[x]) {
+                return true;
+            } 
+        }
+        return false;
     }
 
     handleEditCategory = async (event, users, categoryName) => {
@@ -181,7 +195,6 @@ class Dashboard extends Component {
         if(users.length > 0) {
             let res = await fetch(`${baseUrl}/get-users`);
             let userTable = await res.json();
-            console.log(userTable);
             for(let x = 0; x < users.length; x++) {
                 for(let y = 0; y < userTable.length; y++) {
                     if(users[x].toLowerCase() === userTable[y].username.toLowerCase()) {
@@ -193,7 +206,7 @@ class Dashboard extends Component {
             userIdArr = [...new Set(userIdArr)];
         }
 
-        if(this.OGCategoryName !== categoryName) {
+        if(this.OGCategoryName !== categoryName || this.isUserArrayNotEqual(userIdArr.sort())) {
             fetch(`${baseUrl}/update-category/${editCategoryId}`, {
                 method: 'PUT',
                 headers: {
@@ -209,7 +222,7 @@ class Dashboard extends Component {
                 this.setState({ 
                     categoryName: categoryName,
                     users: userIdArr,
-                    editSaveBtn: true
+                    editSaveBtnDisabled: true
                 });
             })
             .catch(err => {
@@ -273,7 +286,7 @@ class Dashboard extends Component {
                     <div className="modal-footer">
                         <a href="#!" className="modal-close waves-effect waves-green btn-flat"
                         onClick={(e) => {this.handleEditCategory(e, this.state.users, this.state.categoryName)}}
-                        disabled={this.state.editSaveBtn}>Save</a>
+                        disabled={this.state.editSaveBtnDisabled}>Save</a>
                     </div>
                 </div>
             </div>
