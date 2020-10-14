@@ -42,7 +42,7 @@ class LoginForm extends Component {
             }
         })
         .then(data => {
-            localStorage.setItem('user', JSON.stringify({ firstName: data.first_name, userId: data.id }));
+            localStorage.setItem('user', JSON.stringify({ firstName: data.first_name, userId: data.id, username: data.username }));
             this.props.setIsLoggedIn(true);
         })
         .catch(err => {
