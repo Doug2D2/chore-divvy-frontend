@@ -205,15 +205,14 @@ class Chores extends Component {
                                 <span>{chore.chore_name}</span>
                             </li>
                         ))}
+                        <button 
+                            className='btn ' 
+                            onClick={(e) => {this.props.handleOpenModal(e, '.addChoreModal')}}>
+                                <i className="material-icons">add</i>
+                        </button>
                     </ul>
                 </div>
 
-                <button 
-                    className='btn ' 
-                    onClick={(e) => {this.props.handleOpenModal(e, '.addChoreModal')}}>
-                        <i className="material-icons">add</i>
-                </button>
-            
                 <div id="modal1" className="modal choreModal modal-fixed-footer">
                 <div className="modal-content">
 
