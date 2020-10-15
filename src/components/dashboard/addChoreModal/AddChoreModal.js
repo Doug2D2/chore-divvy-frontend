@@ -18,6 +18,7 @@ class addChoreModal extends Component{
 
     componentDidMount() {
         this.getFrequencies();
+        this.getUsersCategories();
     }
 
     handleAddChoreName = event => {
@@ -51,6 +52,10 @@ class addChoreModal extends Component{
         this.setState({ choreDifficulty: event.target.value });
     }
 
+    handleAddNote = event => {
+        this.setState({ choreNotes: event.target.value });
+    }
+
     getFrequencies() {
         fetch(`${baseUrl}/get-frequencies`)
         .then(res => res.json())
@@ -71,6 +76,10 @@ class addChoreModal extends Component{
         .catch(err => {
             console.log(err);
         })
+    }
+
+    handleAddChore(event) {
+        event.preventDefault();
     }
 
     render() {
@@ -140,8 +149,14 @@ class addChoreModal extends Component{
                         </div>
                     </div>
 
-                    <textarea value={this.state.choreNotes} onChange={this.handleNoteChange}></textarea>
+                    <textarea value={this.state.choreNotes} onChange={this.handleAddNote}></textarea>
                     <label>Notes</label>
+
+                    <button className={this.state.choreName && this.state.choreStatus && this.state.choreCategoryId ? 'btn right' : 'btn right disabled'}
+                        onClick={this.handleAddChore}
+                    >
+                        Save
+                    </button>
 
                 </div>
             </div>
