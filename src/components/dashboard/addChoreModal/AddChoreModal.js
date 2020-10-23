@@ -78,8 +78,42 @@ class addChoreModal extends Component{
         })
     }
 
-    handleAddChore(event) {
+    handleAddChore(event, choreName, choreStatus, choreAssigneeUsername, choreFreqId, choreCategoryId, choreDifficulty, choreNotes) {
         event.preventDefault();
+
+        if(!choreAssigneeUsername) {
+            choreAssigneeUsername = null;
+        }
+        if(!choreFreqId) {
+            choreFreqId = null;
+        }
+        if(!choreDifficulty) {
+            choreDifficulty = null;
+        }
+
+        if(choreName && choreStatus && choreCategoryId) {
+            fetch(`${baseUrl}/add-chore`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    choreName: choreName,
+                    status: choreStatus,
+                    frequencyId: choreFreqId,
+                    categoryId: choreCategoryId,
+                    assigneeId: choreAssigneeUsername,
+                    difficulty: choreDifficulty,
+                    notes: choreNotes
+                })
+            })
+            .then(res => res.json())
+            .then(newChoreData => {
+                console.log(newChoreData);
+                this.getUsersCategories();
+            })
+            .catch(err => console.log(err));
+        }
     }
 
     render() {
@@ -152,9 +186,11 @@ class addChoreModal extends Component{
                     <textarea value={this.state.choreNotes} onChange={this.handleAddNote}></textarea>
                     <label>Notes</label>
 
-                    <button className={this.state.choreName && this.state.choreStatus && this.state.choreCategoryId ? 'btn right' : 'btn right disabled'}
-                        onClick={this.handleAddChore}
-                    >
+                    <button className={this.state.choreName && this.state.choreStatus && this.state.choreCategoryId 
+                    ? 'btn right' : 'btn right disabled'}
+                        onClick={(e) => {this.handleAddChore(e, this.state.choreName, this.state.choreStatus, 
+                        this.state.choreAssigneeUsername, this.state.choreFreqId, this.state.choreCategoryId,
+                        this.state.choreDifficulty, this.state.choreNotes)}}>
                         Save
                     </button>
 

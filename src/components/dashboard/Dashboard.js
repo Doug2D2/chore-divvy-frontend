@@ -102,7 +102,10 @@ class Dashboard extends Component {
         }
 
         let elem = document.querySelector(modal);
-        M.Modal.init(elem, {});
+        let options = {
+            // dismissible: false
+        }
+        M.Modal.init(elem, options);
         let instance = M.Modal.getInstance(elem);
 
         instance.open();
