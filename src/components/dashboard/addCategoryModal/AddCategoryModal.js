@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import AddUserInput from './addUserInput/AddUserInput';
 import '../addCategoryModal/addCategoryModal.css';
-import M from "materialize-css";
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class AddCategoryModal extends Component {

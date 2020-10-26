@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import M from "materialize-css";
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class addChoreModal extends Component{
