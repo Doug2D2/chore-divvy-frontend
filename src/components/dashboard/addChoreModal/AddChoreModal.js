@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import M from "materialize-css";
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class addChoreModal extends Component{
@@ -109,8 +110,18 @@ class addChoreModal extends Component{
             })
             .then(res => res.json())
             .then(newChoreData => {
-                console.log(newChoreData);
-                this.getUsersCategories();
+                this.props.handleCloseModal('.addChoreModal');
+                this.props.getChores();
+                this.setState({
+                    choreAssigneeUsername: '',
+                    choreCategoryId: '',
+                    choreName: '',
+                    choreDateComplete: '',
+                    choreDifficulty: '',
+                    choreFreqId: '',
+                    choreNotes: '',
+                    choreStatus: '' 
+                });
             })
             .catch(err => console.log(err));
         }

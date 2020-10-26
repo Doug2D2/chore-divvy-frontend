@@ -133,7 +133,7 @@ class Chores extends Component {
             }
         }
 
-        this.handleCloseChoreModal();
+        this.props.handleCloseModal('.choreModal');
     }
     
     handleDeleteChore(event,  id) {
@@ -148,15 +148,10 @@ class Chores extends Component {
             console.log(err);
         });
 
-        this.handleCloseChoreModal();
+        this.props.handleCloseModal('.choreModal');
     }
 
-    handleCloseChoreModal() {
-        let elem = document.querySelector('.choreModal');
-        M.Modal.init(elem, {});
-        let instance = M.Modal.getInstance(elem);
-        instance.close();
-    }
+
 
     getUsersCategories() {
         fetch(`${baseUrl}/get-categories-by-userId/${this.user.userId}`)

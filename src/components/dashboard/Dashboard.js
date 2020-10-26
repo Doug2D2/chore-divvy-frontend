@@ -111,6 +111,13 @@ class Dashboard extends Component {
         instance.open();
     }
 
+    handleCloseModal(modal) {
+        let elem = document.querySelector(modal);
+        M.Modal.init(elem, {});
+        let instance = M.Modal.getInstance(elem);
+        instance.close();
+    }
+
     addNewCategory = (categoryName, userIdArr) => {
         //API call to add category
         fetch(`${baseUrl}/add-category`, {
@@ -241,9 +248,9 @@ class Dashboard extends Component {
                 handleOpenModal={this.handleOpenModal}
                 handleDeleteCategory={this.handleDeleteCategory}/>
                 <Chores chores={this.state.chores} getChores={this.getChores} users={this.state.users}
-                handleOpenModal={this.handleOpenModal}/>
+                handleOpenModal={this.handleOpenModal} handleCloseModal={this.handleCloseModal}/>
                 <AddCategoryModal addNewCategory={this.addNewCategory}/>
-                <AddChoreModal />
+                <AddChoreModal getChores={this.getChores} handleCloseModal={this.handleCloseModal}/>
 
                 <div id="modal1" className="modal editModal modal-fixed-footer">
                     <div className="modal-content">
