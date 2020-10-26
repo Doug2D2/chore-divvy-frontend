@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SideMenuBar from '../sideMenuBar/SideMenuBar';
 import AddCategoryModal from './addCategoryModal/AddCategoryModal';
 import Chores from './chores/Chores';
+import AddChoreModal from './addChoreModal/AddChoreModal';
 import M from "materialize-css";
 import { Redirect } from 'react-router-dom';
 import '../dashboard/dashboard.css';
@@ -106,10 +107,20 @@ class Dashboard extends Component {
             this.OGUsers = [category.user_id].sort();
         }
         let elem = document.querySelector(modal);
-        M.Modal.init(elem, {});
+        let options = {
+            // dismissible: false
+        }
+        M.Modal.init(elem, options);
         let instance = M.Modal.getInstance(elem);
 
         instance.open();
+    }
+
+    handleCloseModal(modal) {
+        let elem = document.querySelector(modal);
+        M.Modal.init(elem, {});
+        let instance = M.Modal.getInstance(elem);
+        instance.close();
     }
 
     addNewCategory = (categoryName, userIdArr) => {
@@ -242,8 +253,10 @@ class Dashboard extends Component {
                 handleCategoryClick={this.handleCategoryClick}
                 handleOpenModal={this.handleOpenModal}
                 handleDeleteCategory={this.handleDeleteCategory}/>
-                <Chores chores={this.state.chores} getChores={this.getChores} users={this.state.users}/>
+                <Chores chores={this.state.chores} getChores={this.getChores} users={this.state.users}
+                handleOpenModal={this.handleOpenModal} handleCloseModal={this.handleCloseModal}/>
                 <AddCategoryModal addNewCategory={this.addNewCategory}/>
+                <AddChoreModal getChores={this.getChores} handleCloseModal={this.handleCloseModal}/>
 
                 <div id="modal1" className="modal editModal modal-fixed-footer">
                     <div className="modal-content">
