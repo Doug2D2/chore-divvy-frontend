@@ -71,6 +71,11 @@ class AddCategoryModal extends Component {
             <div id="modal1" className="modal addModal modal-fixed-footer">
                 <div className="modal-content">
                     <div className='row'>
+                        <i className="material-icons right"
+                        onClick={() => this.props.handleCloseModal('.addModal')}
+                        >close</i>
+                    </div>
+                    <div className='row'>
                         <div className='col s8 offset-s2'>
                             <input placeholder='Category Name' type="text" name="categoryName" id="categoryName" 
                             value={this.state.categoryNameInput}
@@ -91,6 +96,11 @@ class AddCategoryModal extends Component {
                     </div>
                 </div>
                 <div className="modal-footer">
+                    <button className="btn left red" 
+                        onClick={() => this.props.handleCloseModal('.addModal')}>
+                            Cancel
+                    </button>
+
                     <a href="#!" className="modal-close waves-effect waves-green btn-flat"
                     onClick={(e) => {this.handleSaveCategory(e, this.state.addUserInputs, this.state.categoryNameInput)}}
                     >Save</a>

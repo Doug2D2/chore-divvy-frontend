@@ -212,7 +212,7 @@ class Chores extends Component {
                 <div className="modal-content">
 
                     <i className="material-icons right"
-                    onClick={this.handleCloseChoreModal}
+                    onClick={() => this.props.handleCloseModal('.choreModal')}
                     >close</i>
 
                     <div className='row choreEditForm'>
