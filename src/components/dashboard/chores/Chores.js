@@ -29,6 +29,9 @@ class Chores extends Component {
     handleChoreClick(event, modal, chore) {
         event.preventDefault();
         let elem = document.querySelector(modal);
+        let options = {
+            dismissible: false
+        }
         this.getUserById(chore.assignee_id);
         this.currentChore = chore; 
 
@@ -47,7 +50,7 @@ class Chores extends Component {
             detailsBool: !this.state.detailsBool
         });
         
-        M.Modal.init(elem, {});
+        M.Modal.init(elem, options);
         let instance = M.Modal.getInstance(elem);
         instance.open();
     }
@@ -212,7 +215,7 @@ class Chores extends Component {
                 <div className="modal-content">
 
                     <i className="material-icons right"
-                    onClick={this.handleCloseChoreModal}
+                    onClick={() => this.props.handleCloseModal('.choreModal')}
                     >close</i>
 
                     <div className='row choreEditForm'>
@@ -284,6 +287,11 @@ class Chores extends Component {
                         <button className="btn left red" 
                             onClick={(e) => this.handleDeleteChore(e, this.currentChore.id)}>
                                 <i className="material-icons deleteChoreIcon">delete</i>
+                        </button>
+
+                        <button className="btn left red" 
+                            onClick={() => this.props.handleCloseModal('.choreModal')}>
+                                Cancel
                         </button>
 
                         <button className={!this.state.choreName ? "btn right disabled" : "btn right"} 

@@ -108,7 +108,7 @@ class Dashboard extends Component {
         }
         let elem = document.querySelector(modal);
         let options = {
-            // dismissible: false
+            dismissible: false
         }
         M.Modal.init(elem, options);
         let instance = M.Modal.getInstance(elem);
@@ -255,11 +255,17 @@ class Dashboard extends Component {
                 handleDeleteCategory={this.handleDeleteCategory}/>
                 <Chores chores={this.state.chores} getChores={this.getChores} users={this.state.users}
                 handleOpenModal={this.handleOpenModal} handleCloseModal={this.handleCloseModal}/>
-                <AddCategoryModal addNewCategory={this.addNewCategory}/>
+                <AddCategoryModal addNewCategory={this.addNewCategory} handleCloseModal={this.handleCloseModal}/>
                 <AddChoreModal getChores={this.getChores} handleCloseModal={this.handleCloseModal}/>
 
                 <div id="modal1" className="modal editModal modal-fixed-footer">
                     <div className="modal-content">
+                        <div className='row'>
+                            <i className="material-icons right"
+                            onClick={() => this.handleCloseModal('.editModal')}
+                            >close</i>
+                        </div>
+
                         <div className='row'>
                             <div className='col s8 offset-s2'>
                                 <input type="text" name="categoryName" id="categoryName" 
@@ -297,6 +303,11 @@ class Dashboard extends Component {
                         </div>
                     </div>
                     <div className="modal-footer">
+                        <button className="btn left red" 
+                            onClick={() => this.handleCloseModal('.editModal')}>
+                                Cancel
+                        </button>
+
                         <a href="#!" className="modal-close waves-effect waves-green btn-flat"
                         onClick={(e) => {this.handleEditCategory(e, this.state.users, this.state.categoryName)}}
                         disabled={this.state.editSaveBtnDisabled}>Save</a>
