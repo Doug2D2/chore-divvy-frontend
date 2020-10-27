@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AddUserInput from './addUserInput/AddUserInput';
 import '../addCategoryModal/addCategoryModal.css';
+import M from "materialize-css";
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class AddCategoryModal extends Component {
@@ -66,13 +67,25 @@ class AddCategoryModal extends Component {
         }
     }
 
+    handleCloseAddCategoryModal(modal) {
+        this.setState({
+            addUserInputs: [],
+            categoryNameInput: ''
+        });
+
+        let elem = document.querySelector(modal);
+        M.Modal.init(elem, {});
+        let instance = M.Modal.getInstance(elem);
+        instance.close();
+    }
+
     render() {
         return (
             <div id="modal1" className="modal addModal modal-fixed-footer">
                 <div className="modal-content">
                     <div className='row'>
                         <i className="material-icons right"
-                        onClick={() => this.props.handleCloseModal('.addModal')}
+                        onClick={() => this.handleCloseAddCategoryModal('.addModal')}
                         >close</i>
                     </div>
                     <div className='row'>
@@ -97,7 +110,7 @@ class AddCategoryModal extends Component {
                 </div>
                 <div className="modal-footer">
                     <button className="btn left red" 
-                        onClick={() => this.props.handleCloseModal('.addModal')}>
+                        onClick={() => this.handleCloseAddCategoryModal('.addModal')}>
                             Cancel
                     </button>
 

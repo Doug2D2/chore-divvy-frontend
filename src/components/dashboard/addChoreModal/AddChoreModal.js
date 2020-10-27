@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import M from "materialize-css";
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class addChoreModal extends Component{
@@ -126,13 +127,31 @@ class addChoreModal extends Component{
         }
     }
 
+    handleCloseAddChoreModal(modal) {
+        this.setState({
+            choreAssigneeUsername: '',
+            choreCategoryId: '',
+            choreName: '',
+            choreDateComplete: '',
+            choreDifficulty: '',
+            choreFreqId: '',
+            choreNotes: '',
+            choreStatus: ''   
+        });
+        
+        let elem = document.querySelector(modal);
+        M.Modal.init(elem, {});
+        let instance = M.Modal.getInstance(elem);
+        instance.close();
+    }
+
     render() {
         return (
             <div id="modal1" className="modal addChoreModal modal-fixed-footer">
                 <div className="modal-content">
 
                     <i className="material-icons right"
-                    onClick={() => this.props.handleCloseModal('.addChoreModal')}
+                    onClick={() => this.handleCloseAddChoreModal('.addChoreModal')}
                     >close</i>
 
                     <div className='row addChoreForm'>
@@ -201,7 +220,7 @@ class addChoreModal extends Component{
                     <label>Notes</label>
 
                     <button className="btn left red" 
-                        onClick={() => this.props.handleCloseModal('.addChoreModal')}>
+                        onClick={() => this.handleCloseAddChoreModal('.addChoreModal')}>
                             Cancel
                     </button>
 
