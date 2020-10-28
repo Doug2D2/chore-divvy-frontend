@@ -38,7 +38,6 @@ class SignUpForm extends Component {
                         })
                     })
                     .then(res => {
-                        console.log(res);
                         if(res.status === 401) {
                             this.setState({ 
                                 errorMessage: `Account with email ${this.state.usernameInput} already exists`
