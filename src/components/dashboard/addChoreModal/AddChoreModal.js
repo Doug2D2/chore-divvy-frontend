@@ -79,7 +79,7 @@ class addChoreModal extends Component{
         })
     }
 
-    handleAddChore(event, choreName, choreStatus, choreAssigneeUsername, choreFreqId, choreCategoryId, choreDifficulty, choreNotes) {
+    handleAddChore(event, choreName, choreStatus, choreAssigneeUsername, choreDateComplete, choreFreqId, choreCategoryId, choreDifficulty, choreNotes) {
         event.preventDefault();
 
         if(!choreAssigneeUsername) {
@@ -101,6 +101,7 @@ class addChoreModal extends Component{
                 body: JSON.stringify({
                     choreName: choreName,
                     status: choreStatus,
+                    dateComplete: choreDateComplete,
                     frequencyId: choreFreqId,
                     categoryId: choreCategoryId,
                     assigneeId: choreAssigneeUsername,
@@ -138,7 +139,7 @@ class addChoreModal extends Component{
             choreNotes: '',
             choreStatus: ''   
         });
-        
+
         let elem = document.querySelector(modal);
         M.Modal.init(elem, {});
         let instance = M.Modal.getInstance(elem);
@@ -227,7 +228,7 @@ class addChoreModal extends Component{
                     <button className={this.state.choreName && this.state.choreStatus && this.state.choreCategoryId 
                     ? 'btn right' : 'btn right disabled'}
                         onClick={(e) => {this.handleAddChore(e, this.state.choreName, this.state.choreStatus, 
-                        this.state.choreAssigneeUsername, this.state.choreFreqId, this.state.choreCategoryId,
+                        this.state.choreAssigneeUsername, this.state.choreDateComplete, this.state.choreFreqId, this.state.choreCategoryId,
                         this.state.choreDifficulty, this.state.choreNotes)}}>
                         Save
                     </button>
