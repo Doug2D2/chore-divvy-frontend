@@ -11,8 +11,6 @@ class SignUpForm extends Component {
         confirmPasswordInput: '',
         firstNameInput: '',
         lastNameInput: '',
-        isLoggedIn: false,
-        redirect: false,
         errorMessage: ''
     }
 
@@ -41,14 +39,14 @@ class SignUpForm extends Component {
                         if(res.status === 401) {
                             this.setState({ 
                                 errorMessage: `Account with email ${this.state.usernameInput} already exists`
-                            })
+                            });
                         } else {
-                            this.setState({
-                                isLoggedIn: true,
-                                redirect: true,
-                                errorMessage: ''
-                            })
+                            return res.json();
                         }
+                    })
+                    .then(newUserData => {
+                        localStorage.setItem('user', JSON.stringify({ firstName: newUserData.first_name, userId: newUserData.id, username: newUserData.username }));
+                        this.props.setIsLoggedIn(true);
                     })
                     .catch((err) => {
                         this.setState({ errorMessage: 'Server Error'})
@@ -74,7 +72,7 @@ class SignUpForm extends Component {
             && this.state.usernameInput.length > 0 && this.state.passwordInput.length > 0 
             && this.state.confirmPasswordInput.length > 0;
 
-            if(this.state.redirect) {
+            if(this.props.isLoggedInState) {
                 return <Redirect push to='/dashboard' />
             }
 

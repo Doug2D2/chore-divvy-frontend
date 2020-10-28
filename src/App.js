@@ -24,7 +24,7 @@ class App extends Component {
           <Switch>
             <Route path='/' exact render={(routeProps) => (<LoginForm {...routeProps} setIsLoggedIn={this.setIsLoggedIn} isLoggedInState={this.state.isLoggedIn}/>)} />
             <Route path='/dashboard' render={(routeProps) => (<Dashboard {...routeProps} setIsLoggedIn={this.setIsLoggedIn} isLoggedInState={this.state.isLoggedIn}/>)}/>
-            <Route path='/sign-up-form' component={SignUpForm}/>
+            <Route path='/sign-up-form' render={(routeProps) => (<SignUpForm {...routeProps} setIsLoggedIn={this.setIsLoggedIn} isLoggedInState={this.state.isLoggedIn}/>)}/>
             <Route path='/forgot-password' component={ForgotPassword}/>
           </Switch>
         </Router>
