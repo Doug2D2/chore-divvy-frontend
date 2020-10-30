@@ -7,7 +7,8 @@ const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 class AddCategoryModal extends Component {
     state = {
         addUserInputs: [],
-        categoryNameInput: ''
+        categoryNameInput: '',
+        invalidUsers: []
     }
 
     handleAddUserChange = (event) => {
@@ -15,7 +16,10 @@ class AddCategoryModal extends Component {
         let index = indexArr[indexArr.length - 1];
         let tempArr = this.state.addUserInputs;
         tempArr[index] = event.target.value;
-        this.setState({ addUserInputs: tempArr });
+        this.setState({ 
+            addUserInputs: tempArr,
+            invalidUsers: [] 
+        });
     }
 
     handleRemoveUser = (event, index) => {
@@ -33,8 +37,8 @@ class AddCategoryModal extends Component {
         event.preventDefault();
         const emailFormatRegEx = /\S+@\S+/;
         let isEmailAddressValid; 
-        let invalidEmailIndeces = [];
-        let nonexistentUserIndeces = [];
+        let tempInvalidUserArr = [];
+        let doesUserExist;
 
         if(categoryName) {
             let userIdArr = [JSON.parse(localStorage.getItem('user')).userId];
@@ -42,32 +46,51 @@ class AddCategoryModal extends Component {
                 //loop through users added to new Category and all Users in db, if they match add the user's Id to userIdArr
                     for(let x = 0; x < users.length; x++) {
                         //check that username is in email format
+                        doesUserExist = false;
                         isEmailAddressValid = emailFormatRegEx.test(users[x]);
                         if(isEmailAddressValid) {
                             for(let y = 0; y < this.props.allUsers.length; y++) {
                                 if(users[x].toLowerCase() === this.props.allUsers[y].username.toLowerCase()) {
                                     userIdArr.push(this.props.allUsers[y].id);
-                                } else {
-                                    nonexistentUserIndeces.push(x);
-                                }
+                                    doesUserExist = true;
+                                    break;
+                                } 
+                            }
+
+                            if(!doesUserExist) {
+                                    tempInvalidUserArr.push({
+                                    index: x,
+                                    errMsg: 'User Does Not Exist'
+                                }); 
                             }
                         } else {
-                            invalidEmailIndeces.push(x);
+                            tempInvalidUserArr.push({
+                                index: x,
+                                errMsg: 'Invalid Username Format'
+                            });
                         }
                     }
                     
-                    // removes any duplicates in array
-                    userIdArr = [...new Set(userIdArr)];
-                    this.props.addNewCategory(categoryName, userIdArr);
-                    this.setState({ 
-                        categoryNameInput: '',
-                        addUserInputs: []
-                    })
+                    //if there are no invalid email addresses or users that don't exist in DB, continue with adding category
+                    // console.log(tempInvalidUserArr)
+                    if(tempInvalidUserArr.length === 0) {
+                        // removes any duplicates in array
+                        userIdArr = [...new Set(userIdArr)];
+                        this.props.addNewCategory(categoryName, userIdArr);
+                        this.setState({ 
+                            categoryNameInput: '',
+                            addUserInputs: []
+                        })
+                    //else, prevent adding category
+                    } else {
+                        this.setState({ invalidUsers: tempInvalidUserArr });
+                    }
             } else {
                 this.props.addNewCategory(categoryName, userIdArr);
                 this.setState({ 
                     categoryNameInput: '',
-                    addUserInputs: []
+                    addUserInputs: [],
+                    invalidUsers: []
                 })
             }
         }
@@ -76,7 +99,8 @@ class AddCategoryModal extends Component {
     handleCloseAddCategoryModal(modal) {
         this.setState({
             addUserInputs: [],
-            categoryNameInput: ''
+            categoryNameInput: '',
+            invalidUsers: []
         });
 
         let elem = document.querySelector(modal);
@@ -113,7 +137,8 @@ class AddCategoryModal extends Component {
                         {this.state.addUserInputs.map((input, index) => (
                             <AddUserInput key={index} i={index} userInput={input} 
                             handleAddUserChange={this.handleAddUserChange}
-                            handleRemoveUser={this.handleRemoveUser}/>
+                            handleRemoveUser={this.handleRemoveUser}
+                            invalidUsersState={this.state.invalidUsers}/>
                         ))}
                         
                         <div className='col s8 offset-s2'>
@@ -127,7 +152,7 @@ class AddCategoryModal extends Component {
                             Cancel
                     </button>
 
-                    <a href="#!" className="modal-close waves-effect waves-green btn-flat"
+                    <a href="#!" className={this.state.categoryNameInput && this.state.invalidUsers.length === 0 ? "btn right" : "btn right disabled"}
                     onClick={(e) => {this.handleSaveCategory(e, this.state.addUserInputs, this.state.categoryNameInput)}}
                     >Save</a>
                 </div>
