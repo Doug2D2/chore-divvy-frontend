@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import AddUserInput from './addUserInput/AddUserInput';
 import '../addCategoryModal/addCategoryModal.css';
 import M from "materialize-css";
+const validator = require("email-validator");
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class AddCategoryModal extends Component {
@@ -35,7 +36,6 @@ class AddCategoryModal extends Component {
 
     handleSaveCategory = (event, users, categoryName) => {
         event.preventDefault();
-        const emailFormatRegEx = /\S+@\S+/;
         let isEmailAddressValid; 
         let tempInvalidUserArr = [];
         let doesUserExist;
@@ -47,7 +47,7 @@ class AddCategoryModal extends Component {
                     for(let x = 0; x < users.length; x++) {
                         //check that username is in email format
                         doesUserExist = false;
-                        isEmailAddressValid = emailFormatRegEx.test(users[x]);
+                        isEmailAddressValid = validator.validate(users[x]);
                         if(isEmailAddressValid) {
                             for(let y = 0; y < this.props.allUsers.length; y++) {
                                 if(users[x].toLowerCase() === this.props.allUsers[y].username.toLowerCase()) {
@@ -72,14 +72,14 @@ class AddCategoryModal extends Component {
                     }
                     
                     //if there are no invalid email addresses or users that don't exist in DB, continue with adding category
-                    // console.log(tempInvalidUserArr)
                     if(tempInvalidUserArr.length === 0) {
                         // removes any duplicates in array
                         userIdArr = [...new Set(userIdArr)];
                         this.props.addNewCategory(categoryName, userIdArr);
                         this.setState({ 
                             categoryNameInput: '',
-                            addUserInputs: []
+                            addUserInputs: [],
+                            invalidUsers: []
                         })
                     //else, prevent adding category
                     } else {
