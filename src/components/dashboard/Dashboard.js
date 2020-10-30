@@ -18,6 +18,7 @@ class Dashboard extends Component {
     }
     OGCategoryName = '';
     OGUsers = [];
+    allUsers = [];
 
     componentDidMount() {
         this.user = JSON.parse(localStorage.getItem('user'));
@@ -25,6 +26,7 @@ class Dashboard extends Component {
             this.props.setIsLoggedIn(false);
         }
         this.getCategories();
+        this.getUsers();
     }
 
     getChores = () => {
@@ -57,6 +59,22 @@ class Dashboard extends Component {
                 console.log(err);
             })
         }
+    }
+
+    getUsers() {
+        fetch(`${baseUrl}/get-users`)
+        .then(res => res.json())
+        .then(allUsersFromDB => {
+            for(let x = 0; x < allUsersFromDB.length; x++) {
+                this.allUsers.push({
+                    id: allUsersFromDB[x].id,
+                    username: allUsersFromDB[x].username,
+                    first: allUsersFromDB[x].first_name,
+                    last: allUsersFromDB[x].last_name
+                })
+            }
+        })
+        .catch(err => console.log(err));
     }
 
     handleCategoryClick = (event) => {
@@ -255,8 +273,8 @@ class Dashboard extends Component {
                 handleDeleteCategory={this.handleDeleteCategory}/>
                 <Chores chores={this.state.chores} getChores={this.getChores} users={this.state.users}
                 handleOpenModal={this.handleOpenModal} handleCloseModal={this.handleCloseModal}/>
-                <AddCategoryModal addNewCategory={this.addNewCategory} handleCloseModal={this.handleCloseModal}/>
-                <AddChoreModal getChores={this.getChores} handleCloseModal={this.handleCloseModal}/>
+                <AddCategoryModal addNewCategory={this.addNewCategory} handleCloseModal={this.handleCloseModal} allUsers={this.allUsers}/>
+                <AddChoreModal getChores={this.getChores} handleCloseModal={this.handleCloseModal} />
 
                 <div id="modal1" className="modal editModal modal-fixed-footer">
                     <div className="modal-content">

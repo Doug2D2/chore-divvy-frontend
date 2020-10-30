@@ -31,21 +31,31 @@ class AddCategoryModal extends Component {
 
     handleSaveCategory = (event, users, categoryName) => {
         event.preventDefault();
+        const emailFormatRegEx = /\S+@\S+/;
+        let isEmailAddressValid; 
+        let invalidEmailIndeces = [];
+        let nonexistentUserIndeces = [];
+
         if(categoryName) {
             let userIdArr = [JSON.parse(localStorage.getItem('user')).userId];
             if(users.length > 0) {
-                fetch(`${baseUrl}/get-users`)
-                .then(res => {
-                    return res.json();
-                })
-                .then(userTable => {
+                //loop through users added to new Category and all Users in db, if they match add the user's Id to userIdArr
                     for(let x = 0; x < users.length; x++) {
-                        for(let y = 0; y < userTable.length; y++) {
-                            if(users[x].toLowerCase() === userTable[y].username.toLowerCase()) {
-                                userIdArr.push(userTable[y].id);
-                            } 
+                        //check that username is in email format
+                        isEmailAddressValid = emailFormatRegEx.test(users[x]);
+                        if(isEmailAddressValid) {
+                            for(let y = 0; y < this.props.allUsers.length; y++) {
+                                if(users[x].toLowerCase() === this.props.allUsers[y].username.toLowerCase()) {
+                                    userIdArr.push(this.props.allUsers[y].id);
+                                } else {
+                                    nonexistentUserIndeces.push(x);
+                                }
+                            }
+                        } else {
+                            invalidEmailIndeces.push(x);
                         }
                     }
+                    
                     // removes any duplicates in array
                     userIdArr = [...new Set(userIdArr)];
                     this.props.addNewCategory(categoryName, userIdArr);
@@ -53,10 +63,6 @@ class AddCategoryModal extends Component {
                         categoryNameInput: '',
                         addUserInputs: []
                     })
-                })
-                .catch(err => {
-                    console.log(err);
-                });
             } else {
                 this.props.addNewCategory(categoryName, userIdArr);
                 this.setState({ 
@@ -77,6 +83,13 @@ class AddCategoryModal extends Component {
         M.Modal.init(elem, {});
         let instance = M.Modal.getInstance(elem);
         instance.close();
+    }
+
+    handleAddUser = (event) => {
+        event.preventDefault()
+        let tempArr = this.state.addUserInputs;
+        tempArr.push("");
+        this.setState({ addUserInputs: tempArr });
     }
 
     render() {

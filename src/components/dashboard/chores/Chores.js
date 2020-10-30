@@ -96,7 +96,7 @@ class Chores extends Component {
         
         if(choreName && choreStatus && choreCatId) {
             if(choreAssigneeUsername) {
-                fetch(`${baseUrl}/get-users`)
+                fetch(`${baseUrl}`)
                 .then(res => res.json())
                 .then(users => {
                     
