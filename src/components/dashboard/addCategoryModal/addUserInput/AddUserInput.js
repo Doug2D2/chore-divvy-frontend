@@ -10,6 +10,11 @@ function AddUserInput(props) {
                 onChange={props.handleAddUserChange}
                 />
                 <label htmlFor='userName'>Username</label>
+                { props.invalidUsersState.map(invalidUser => (
+                    invalidUser.index === props.i ? 
+                    <p key={invalidUser.index} className="invalidUsersError">{invalidUser.errMsg}</p> 
+                    : <p key={invalidUser.index}></p>
+                ))}
             </div>
             <button type='submit' className='btn-floating col s1 red' id='removeUserBtn'
             onClick={(e) => {props.handleRemoveUser(e, props.i)}}>

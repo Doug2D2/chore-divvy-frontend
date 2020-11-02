@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import AddUserInput from './addUserInput/AddUserInput';
 import '../addCategoryModal/addCategoryModal.css';
 import M from "materialize-css";
+const validator = require("email-validator");
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class AddCategoryModal extends Component {
     state = {
         addUserInputs: [],
-        categoryNameInput: ''
+        categoryNameInput: '',
+        invalidUsers: []
     }
 
     handleAddUserChange = (event) => {
@@ -15,7 +17,10 @@ class AddCategoryModal extends Component {
         let index = indexArr[indexArr.length - 1];
         let tempArr = this.state.addUserInputs;
         tempArr[index] = event.target.value;
-        this.setState({ addUserInputs: tempArr });
+        this.setState({ 
+            addUserInputs: tempArr,
+            invalidUsers: [] 
+        });
     }
 
     handleRemoveUser = (event, index) => {
@@ -31,37 +36,61 @@ class AddCategoryModal extends Component {
 
     handleSaveCategory = (event, users, categoryName) => {
         event.preventDefault();
+        let isEmailAddressValid; 
+        let tempInvalidUserArr = [];
+        let doesUserExist;
+
         if(categoryName) {
             let userIdArr = [JSON.parse(localStorage.getItem('user')).userId];
             if(users.length > 0) {
-                fetch(`${baseUrl}/get-users`)
-                .then(res => {
-                    return res.json();
-                })
-                .then(userTable => {
+                //loop through users added to new Category and all Users in db, if they match add the user's Id to userIdArr
                     for(let x = 0; x < users.length; x++) {
-                        for(let y = 0; y < userTable.length; y++) {
-                            if(users[x].toLowerCase() === userTable[y].username.toLowerCase()) {
-                                userIdArr.push(userTable[y].id);
-                            } 
+                        //check that username is in email format
+                        doesUserExist = false;
+                        isEmailAddressValid = validator.validate(users[x]);
+                        if(isEmailAddressValid) {
+                            for(let y = 0; y < this.props.allUsers.length; y++) {
+                                if(users[x].toLowerCase() === this.props.allUsers[y].username.toLowerCase()) {
+                                    userIdArr.push(this.props.allUsers[y].id);
+                                    doesUserExist = true;
+                                    break;
+                                } 
+                            }
+
+                            if(!doesUserExist) {
+                                    tempInvalidUserArr.push({
+                                    index: x,
+                                    errMsg: 'User Does Not Exist'
+                                }); 
+                            }
+                        } else {
+                            tempInvalidUserArr.push({
+                                index: x,
+                                errMsg: 'Invalid Username Format'
+                            });
                         }
                     }
-                    // removes any duplicates in array
-                    userIdArr = [...new Set(userIdArr)];
-                    this.props.addNewCategory(categoryName, userIdArr);
-                    this.setState({ 
-                        categoryNameInput: '',
-                        addUserInputs: []
-                    })
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+                    
+                    //if there are no invalid email addresses or users that don't exist in DB, continue with adding category
+                    if(tempInvalidUserArr.length === 0) {
+                        // removes any duplicates in array
+                        userIdArr = [...new Set(userIdArr)];
+                        this.props.addNewCategory(categoryName, userIdArr);
+                        this.setState({ 
+                            categoryNameInput: '',
+                            addUserInputs: [],
+                            invalidUsers: []
+                        })
+                    //else, prevent adding category
+                    } else {
+                        this.setState({ invalidUsers: tempInvalidUserArr });
+                    }
             } else {
                 this.props.addNewCategory(categoryName, userIdArr);
                 this.setState({ 
                     categoryNameInput: '',
-                    addUserInputs: []
+                    addUserInputs: [],
+                    invalidUsers: []
                 })
             }
         }
@@ -70,13 +99,21 @@ class AddCategoryModal extends Component {
     handleCloseAddCategoryModal(modal) {
         this.setState({
             addUserInputs: [],
-            categoryNameInput: ''
+            categoryNameInput: '',
+            invalidUsers: []
         });
 
         let elem = document.querySelector(modal);
         M.Modal.init(elem, {});
         let instance = M.Modal.getInstance(elem);
         instance.close();
+    }
+
+    handleAddUser = (event) => {
+        event.preventDefault()
+        let tempArr = this.state.addUserInputs;
+        tempArr.push("");
+        this.setState({ addUserInputs: tempArr });
     }
 
     render() {
@@ -100,7 +137,8 @@ class AddCategoryModal extends Component {
                         {this.state.addUserInputs.map((input, index) => (
                             <AddUserInput key={index} i={index} userInput={input} 
                             handleAddUserChange={this.handleAddUserChange}
-                            handleRemoveUser={this.handleRemoveUser}/>
+                            handleRemoveUser={this.handleRemoveUser}
+                            invalidUsersState={this.state.invalidUsers}/>
                         ))}
                         
                         <div className='col s8 offset-s2'>
@@ -114,7 +152,7 @@ class AddCategoryModal extends Component {
                             Cancel
                     </button>
 
-                    <a href="#!" className="modal-close waves-effect waves-green btn-flat"
+                    <a href="#!" className={this.state.categoryNameInput && this.state.invalidUsers.length === 0 ? "btn right" : "btn right disabled"}
                     onClick={(e) => {this.handleSaveCategory(e, this.state.addUserInputs, this.state.categoryNameInput)}}
                     >Save</a>
                 </div>
