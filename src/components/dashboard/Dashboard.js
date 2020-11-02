@@ -219,16 +219,12 @@ class Dashboard extends Component {
 
     handleEditCategory = async (event, users, categoryName) => {
         event.preventDefault();
-        let editCategoryId = JSON.parse(localStorage.getItem('editCategoryId'));
         let userIdArr = [this.user.userId];
         let doesUserExist;
         let isEmailAddressValid;
         let  tempInvalidUserArr = [];
 
         if(users.length > 0) {
-            // let res = await fetch(`${baseUrl}/get-users`);
-            // let userTable = await res.json();
-
             for(let x = 0; x < users.length; x++) {
                 doesUserExist = false;
                 isEmailAddressValid = validator.validate(users[x]);
@@ -261,28 +257,7 @@ class Dashboard extends Component {
             // removes any duplicates in array
             userIdArr = [...new Set(userIdArr)];
             if(this.OGCategoryName !== categoryName || this.isUserArrayNotEqual(userIdArr.sort())) {
-                fetch(`${baseUrl}/update-category/${editCategoryId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        categoryName: categoryName,
-                        userIds: userIdArr
-                    })
-                })
-                .then(res => {
-                    this.getCategories();
-                    this.setState({ 
-                        categoryName: categoryName,
-                        users: userIdArr,
-                        editSaveBtnDisabled: true,
-                        invalidUsers: []
-                    });
-                })
-                .catch(err => {
-                    console.log(err);
-                })
+                this.updateCategory(categoryName, userIdArr);
             }
         } else {
             this.setState({ 
@@ -291,6 +266,33 @@ class Dashboard extends Component {
             });
         }
 
+    }
+
+    updateCategory(categoryName, userIdArr) {
+        let editCategoryId = JSON.parse(localStorage.getItem('editCategoryId'));
+        fetch(`${baseUrl}/update-category/${editCategoryId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                categoryName: categoryName,
+                userIds: userIdArr
+            })
+        })
+        .then(res => {
+            this.handleCloseModal('.editModal');
+            this.getCategories();
+            this.setState({ 
+                categoryName: categoryName,
+                users: userIdArr,
+                editSaveBtnDisabled: true,
+                invalidUsers: []
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
     render() {
