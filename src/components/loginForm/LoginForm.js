@@ -32,11 +32,7 @@ class LoginForm extends Component {
         })
         .then(res => {
             if(res.status > 399) {
-                this.setState({
-                    usernameInput: '',
-                    passwordInput: '',
-                    loginErrorMsg: 'The username or password entered is incorrect. Please try again.'
-                });
+                throw 'Error';
             } else {
                 return res.json();
             }
@@ -47,7 +43,11 @@ class LoginForm extends Component {
         })
         .catch(err => {
             console.log(err);
-            this.setState({ loginErrorMsg: 'Server Error' });
+            this.setState({
+                usernameInput: '',
+                passwordInput: '',
+                loginErrorMsg: 'The username or password entered is incorrect. Please try again.'
+            });
         });
     }
 
