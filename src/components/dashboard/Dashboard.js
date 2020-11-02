@@ -6,6 +6,7 @@ import AddChoreModal from './addChoreModal/AddChoreModal';
 import M from "materialize-css";
 import { Redirect } from 'react-router-dom';
 import '../dashboard/dashboard.css';
+const validator = require("email-validator");
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class Dashboard extends Component {
@@ -14,7 +15,8 @@ class Dashboard extends Component {
         chores: [],
         categoryName: '',
         users: [],
-        editSaveBtnDisabled: true
+        editSaveBtnDisabled: true,
+        invalidUsers: []
     }
     OGCategoryName = '';
     OGUsers = [];
@@ -217,47 +219,78 @@ class Dashboard extends Component {
 
     handleEditCategory = async (event, users, categoryName) => {
         event.preventDefault();
-
         let editCategoryId = JSON.parse(localStorage.getItem('editCategoryId'));
         let userIdArr = [this.user.userId];
+        let doesUserExist;
+        let isEmailAddressValid;
+        let  tempInvalidUserArr = [];
 
         if(users.length > 0) {
-            let res = await fetch(`${baseUrl}/get-users`);
-            let userTable = await res.json();
+            // let res = await fetch(`${baseUrl}/get-users`);
+            // let userTable = await res.json();
+
             for(let x = 0; x < users.length; x++) {
-                for(let y = 0; y < userTable.length; y++) {
-                    if(users[x].toLowerCase() === userTable[y].username.toLowerCase()) {
-                        userIdArr.push(userTable[y].id);
-                    } 
+                doesUserExist = false;
+                isEmailAddressValid = validator.validate(users[x]);
+                if(isEmailAddressValid) {
+                    for(let y = 0; y < this.allUsers.length; y++) {
+                        if(users[x].toLowerCase() === this.allUsers[y].username.toLowerCase()) {
+                            userIdArr.push(this.allUsers[y].id);
+                            doesUserExist = true;
+                            break;
+                        } 
+                    }
+    
+                    if(!doesUserExist) {
+                        tempInvalidUserArr.push({
+                            index: x,
+                            errMsg: 'User Does Not Exist'
+                        });
+                    }
+                } else {
+                    tempInvalidUserArr.push({
+                        index: x,
+                        errMsg: 'Invalid Username Format'
+                    });
                 }
+                
             }
-            // removes any duplicates in array
-            userIdArr = [...new Set(userIdArr)];
         }
 
-        if(this.OGCategoryName !== categoryName || this.isUserArrayNotEqual(userIdArr.sort())) {
-            fetch(`${baseUrl}/update-category/${editCategoryId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    categoryName: categoryName,
-                    userIds: userIdArr
+        if(tempInvalidUserArr.length === 0) {
+            // removes any duplicates in array
+            userIdArr = [...new Set(userIdArr)];
+            if(this.OGCategoryName !== categoryName || this.isUserArrayNotEqual(userIdArr.sort())) {
+                fetch(`${baseUrl}/update-category/${editCategoryId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        categoryName: categoryName,
+                        userIds: userIdArr
+                    })
                 })
-            })
-            .then(res => {
-                this.getCategories();
-                this.setState({ 
-                    categoryName: categoryName,
-                    users: userIdArr,
-                    editSaveBtnDisabled: true
-                });
-            })
-            .catch(err => {
-                console.log(err);
-            })
+                .then(res => {
+                    this.getCategories();
+                    this.setState({ 
+                        categoryName: categoryName,
+                        users: userIdArr,
+                        editSaveBtnDisabled: true,
+                        invalidUsers: []
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+            }
+        } else {
+            this.setState({ 
+                invalidUsers: tempInvalidUserArr,
+                editSaveBtnDisabled: true 
+            });
         }
+
     }
 
     render() {
