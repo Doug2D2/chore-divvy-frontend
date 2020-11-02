@@ -359,7 +359,7 @@ class Dashboard extends Component {
                                 Cancel
                         </button>
 
-                        <a href="#!" className="modal-close waves-effect waves-green btn-flat"
+                        <a href="#!" className="btn right"
                         onClick={(e) => {this.handleEditCategory(e, this.state.users, this.state.categoryName)}}
                         disabled={this.state.editSaveBtnDisabled}>Save</a>
                     </div>
