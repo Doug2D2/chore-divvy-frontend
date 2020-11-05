@@ -57,20 +57,8 @@ class Chores extends Component {
         instance.open();
     }
 
-    handleChoreNameChange = (event) => {
-        this.setState({ choreName: event.target.value });
-    }
-
-    handleDifficultyChange = (event) => {
-        this.setState({ choreDifficulty: event.target.value });
-    }
-
-    handleCategoryChange = (event) => {
-        this.setState({ choreCategoryId: event.target.value });
-    }
-
-    handleFrequencyChange = (event) => {
-        this.setState({ choreFreqId: event.target.value });
+    handleInputChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value});
     }
 
     handleStatusChange = (event) => {
@@ -82,10 +70,6 @@ class Chores extends Component {
         } else {
             this.setState({ choreStatus: event.target.value });
         }
-    }
-
-    handleNoteChange = (event) => {
-        this.setState({ choreNotes: event.target.value });
     }
 
     handleAssigneeChange = (event) => {
@@ -241,7 +225,7 @@ class Chores extends Component {
                         <input placeholder='Chore Name' type="text" name="choreName" id="choreName" 
                             className={!this.state.choreName ? "choreNameInvalid" : "choreName"}
                             value={this.state.choreName}
-                            onChange={this.handleChoreNameChange}
+                            onChange={this.handleInputChange}
                             required/>
                         <label htmlFor='choreName' className={!this.state.choreName? "choreNameLabelRequired" : "choreNameLabel"}>Chore Name (Required)</label>
 
@@ -265,7 +249,7 @@ class Chores extends Component {
                         { this.state.userErrMsg ? <p className='invalidUsersError'>{this.state.userErrMsg}</p> : <p></p> }
 
                         <div className="input-field frequency">
-                            <select className='browser-default' value={this.state.choreFreqId} onChange={this.handleFrequencyChange}>
+                            <select className='browser-default' value={this.state.choreFreqId} onChange={this.handleInputChange} name='choreFreqId'>
                                 <option value="" disabled>Choose your option</option>
                                 {this.frequencies.map(freq => (
                                     <option key={freq.id} value={freq.id}>{freq.frequency_name}</option>
@@ -277,7 +261,7 @@ class Chores extends Component {
                         </div>
 
                         <div className="input-field category">
-                            <select className='browser-default' value={this.state.choreCategoryId} onChange={this.handleCategoryChange}>
+                            <select className='browser-default' value={this.state.choreCategoryId} onChange={this.handleInputChange} name='choreCategoryId'>
                                 <option value="" disabled>Choose your option</option>
                                 {this.usersCategories.map(category => (
                                     <option key={category.id} value={category.id}>{category.category_name}</option>
@@ -289,7 +273,7 @@ class Chores extends Component {
                         </div>
 
                         <div className="input-field difficulty">
-                            <select className='browser-default' value={this.state.choreDifficulty} onChange={this.handleDifficultyChange}>
+                            <select className='browser-default' value={this.state.choreDifficulty} onChange={this.handleInputChange} name='choreDifficulty'>
                                 <option value="" disabled>Choose your option</option>
                                 <option value="Easy">Easy</option>
                                 <option value="Medium">Medium</option>
@@ -300,7 +284,7 @@ class Chores extends Component {
                             </div>
                         </div>
 
-                        <textarea value={this.state.choreNotes} onChange={this.handleNoteChange}></textarea>
+                        <textarea value={this.state.choreNotes} name='choreNotes' onChange={this.handleInputChange}></textarea>
                         <label>Notes</label>
 
                         <button className="btn left red" 

@@ -79,6 +79,10 @@ class Dashboard extends Component {
         .catch(err => console.log(err));
     }
 
+    handleInputChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value})
+    }
+
     handleCategoryClick = (event) => {
         event.preventDefault();
         localStorage.setItem('categoryId', event.target.id);
@@ -172,10 +176,6 @@ class Dashboard extends Component {
                 console.log(err);
             });
         }
-    }
-
-    handleCategoryNameInputEdit = (event) => {
-        this.setState({ categoryName: event.target.value, editSaveBtnDisabled: false });
     }
 
     handleCategoryUsernameInputEdit = (event, usernameIndex) => {
@@ -321,7 +321,7 @@ class Dashboard extends Component {
                             <div className='col s8 offset-s2'>
                                 <input type="text" name="categoryName" id="categoryName" 
                                 value={this.state.categoryName}
-                                onChange={this.handleCategoryNameInputEdit}
+                                onChange={this.handleInputChange}
                                 required/>
                                 <label htmlFor='categoryName'>Category Name</label>
                             </div>
