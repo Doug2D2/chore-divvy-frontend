@@ -6,6 +6,7 @@ import AddChoreModal from './addChoreModal/AddChoreModal';
 import M from "materialize-css";
 import { Redirect } from 'react-router-dom';
 import '../dashboard/dashboard.css';
+const validator = require("email-validator");
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class Dashboard extends Component {
@@ -14,7 +15,8 @@ class Dashboard extends Component {
         chores: [],
         categoryName: '',
         users: [],
-        editSaveBtnDisabled: true
+        editSaveBtnDisabled: true,
+        invalidUsers: []
     }
     OGCategoryName = '';
     OGUsers = [];
@@ -89,25 +91,18 @@ class Dashboard extends Component {
         let usernameArr = [];
         let currUserId = this.user.userId;
         if(category) {
-            fetch(`${baseUrl}/get-users`)
-            .then(res => res.json())
-            .then(usersTable => {
-                for(let x = 0; x < category.user_id.length; x++) {
-                    for(let y = 0; y < usersTable.length; y++) {
-                        //if category and usertable id matches && category id isn't loggedin users id
-                        if(usersTable[y].id === category.user_id[x] && category.user_id[x] !== currUserId) {
-                            usernameArr.push(usersTable[y].username);
-                        }
+            for(let x = 0; x < category.user_id.length; x++) {
+                for(let y = 0; y < this.allUsers.length; y++) {
+                    //if category and usertable id matches && category id isn't loggedin users id
+                    if(this.allUsers[y].id === category.user_id[x] && category.user_id[x] !== currUserId) {
+                        usernameArr.push(this.allUsers[y].username);
                     }
                 }
-                category.username = usernameArr;
-                this.setState({ 
-                    categoryName: category.category_name,
-                    users: category.username 
-                });
-            })
-            .catch(err => {
-                console.log(err);
+            }
+            category.username = usernameArr;
+            this.setState({ 
+                categoryName: category.category_name,
+                users: category.username 
             });
         }
     }
@@ -215,49 +210,86 @@ class Dashboard extends Component {
         return false;
     }
 
-    handleEditCategory = async (event, users, categoryName) => {
-        event.preventDefault();
-
-        let editCategoryId = JSON.parse(localStorage.getItem('editCategoryId'));
-        let userIdArr = [this.user.userId];
+    validateUsernames(users, userIdArr, allUsers) {
+        let doesUserExist;
+        let isEmailAddressValid;
+        let  tempInvalidUserArr = [];
 
         if(users.length > 0) {
-            let res = await fetch(`${baseUrl}/get-users`);
-            let userTable = await res.json();
             for(let x = 0; x < users.length; x++) {
-                for(let y = 0; y < userTable.length; y++) {
-                    if(users[x].toLowerCase() === userTable[y].username.toLowerCase()) {
-                        userIdArr.push(userTable[y].id);
-                    } 
+                doesUserExist = false;
+                isEmailAddressValid = validator.validate(users[x]);
+                if(isEmailAddressValid) {
+                    for(let y = 0; y < allUsers.length; y++) {
+                        if(users[x].toLowerCase() === allUsers[y].username.toLowerCase()) {
+                            userIdArr.push(allUsers[y].id);
+                            doesUserExist = true;
+                            break;
+                        } 
+                    }
+    
+                    if(!doesUserExist) {
+                        tempInvalidUserArr.push({
+                            index: x,
+                            errMsg: 'User Does Not Exist'
+                        });
+                    }
+                } else {
+                    tempInvalidUserArr.push({
+                        index: x,
+                        errMsg: 'Invalid Username Format'
+                    });
                 }
+                
             }
-            // removes any duplicates in array
-            userIdArr = [...new Set(userIdArr)];
         }
+        return { tempInvalidUserArr: tempInvalidUserArr, userIdArr: userIdArr };
+    }
 
-        if(this.OGCategoryName !== categoryName || this.isUserArrayNotEqual(userIdArr.sort())) {
-            fetch(`${baseUrl}/update-category/${editCategoryId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    categoryName: categoryName,
-                    userIds: userIdArr
-                })
-            })
-            .then(res => {
-                this.getCategories();
-                this.setState({ 
-                    categoryName: categoryName,
-                    users: userIdArr,
-                    editSaveBtnDisabled: true
-                });
-            })
-            .catch(err => {
-                console.log(err);
-            })
+    handleEditCategory = async (event, users, categoryName) => {
+        event.preventDefault();
+        let userIdArr = [this.user.userId];
+        let userArrays = this.validateUsernames(users, userIdArr, this.allUsers);
+
+        if(userArrays.tempInvalidUserArr.length === 0) {
+            // removes any duplicates in array
+            userIdArr = [...new Set(userArrays.userIdArr)];
+            if(this.OGCategoryName !== categoryName || this.isUserArrayNotEqual(userIdArr.sort())) {
+                this.updateCategory(categoryName, userIdArr);
+            }
+        } else {
+            this.setState({ 
+                invalidUsers: userArrays.tempInvalidUserArr,
+                editSaveBtnDisabled: true 
+            });
         }
+    }
+
+    updateCategory(categoryName, userIdArr) {
+        let editCategoryId = JSON.parse(localStorage.getItem('editCategoryId'));
+        fetch(`${baseUrl}/update-category/${editCategoryId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                categoryName: categoryName,
+                userIds: userIdArr
+            })
+        })
+        .then(res => {
+            this.handleCloseModal('.editModal');
+            this.getCategories();
+            this.setState({ 
+                categoryName: categoryName,
+                users: userIdArr,
+                editSaveBtnDisabled: true,
+                invalidUsers: []
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 
     render() {
@@ -272,9 +304,10 @@ class Dashboard extends Component {
                 handleOpenModal={this.handleOpenModal}
                 handleDeleteCategory={this.handleDeleteCategory}/>
                 <Chores chores={this.state.chores} getChores={this.getChores} users={this.state.users}
-                handleOpenModal={this.handleOpenModal} handleCloseModal={this.handleCloseModal}/>
-                <AddCategoryModal addNewCategory={this.addNewCategory} handleCloseModal={this.handleCloseModal} allUsers={this.allUsers}/>
-                <AddChoreModal getChores={this.getChores} handleCloseModal={this.handleCloseModal} />
+                handleOpenModal={this.handleOpenModal} handleCloseModal={this.handleCloseModal} allUsers={this.allUsers}/>
+                <AddCategoryModal addNewCategory={this.addNewCategory} handleCloseModal={this.handleCloseModal} 
+                validateUsernames={this.validateUsernames} allUsers={this.allUsers}/>
+                <AddChoreModal getChores={this.getChores} handleCloseModal={this.handleCloseModal} allUsers={this.allUsers}/>
 
                 <div id="modal1" className="modal editModal modal-fixed-footer">
                     <div className="modal-content">
@@ -303,6 +336,11 @@ class Dashboard extends Component {
                                         onChange={(e) => {this.handleCategoryUsernameInputEdit(e, index)}}
                                         />
                                         <label htmlFor='userName'>Username</label>
+                                        {   this.state.invalidUsers.map(invalidUser => (
+                                            invalidUser.index === index ?
+                                            <p key={invalidUser.index} className="invalidUsersError">{invalidUser.errMsg}</p> :
+                                            <p key={invalidUser.index}></p>
+                                        ))}
                                     </div>
                                     <button type='submit' className='btn-floating col s1 red' id='removeUserInEditBtn'
                                     onClick={(e) => {this.handleRemoveUserInEdit(e, index)}}
@@ -326,7 +364,7 @@ class Dashboard extends Component {
                                 Cancel
                         </button>
 
-                        <a href="#!" className="modal-close waves-effect waves-green btn-flat"
+                        <a href="#!" className="btn right"
                         onClick={(e) => {this.handleEditCategory(e, this.state.users, this.state.categoryName)}}
                         disabled={this.state.editSaveBtnDisabled}>Save</a>
                     </div>

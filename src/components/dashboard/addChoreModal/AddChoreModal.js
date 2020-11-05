@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import M from "materialize-css";
+const validator = require("email-validator");
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class addChoreModal extends Component{
@@ -11,7 +12,8 @@ class addChoreModal extends Component{
         choreDifficulty: '',
         choreFreqId: '',
         choreNotes: '',
-        choreStatus: ''   
+        choreStatus: '',
+        userErrMsg: ''   
     }
     user = JSON.parse(localStorage.getItem('user'));
     frequencies = [];
@@ -38,7 +40,10 @@ class addChoreModal extends Component{
     }
 
     handleAddAssigneeUsername = event => {
-        this.setState({ choreAssigneeUsername: event.target.value });
+        this.setState({ 
+            choreAssigneeUsername: event.target.value,
+            userErrMsg: ''
+         });
     }
 
     handleAddFrequency = event => {
@@ -79,19 +84,7 @@ class addChoreModal extends Component{
         })
     }
 
-    handleAddChore(event, choreName, choreStatus, choreAssigneeUsername, choreDateComplete, choreFreqId, choreCategoryId, choreDifficulty, choreNotes) {
-        event.preventDefault();
-
-        if(!choreAssigneeUsername) {
-            choreAssigneeUsername = null;
-        }
-        if(!choreFreqId) {
-            choreFreqId = null;
-        }
-        if(!choreDifficulty) {
-            choreDifficulty = null;
-        }
-
+    addChore(choreName, choreStatus, choreCategoryId, choreDateComplete, choreFreqId, choreAssigneeUsername, choreDifficulty, choreNotes) {
         if(choreName && choreStatus && choreCategoryId) {
             fetch(`${baseUrl}/add-chore`, {
                 method: 'POST',
@@ -121,11 +114,63 @@ class addChoreModal extends Component{
                     choreDifficulty: '',
                     choreFreqId: '',
                     choreNotes: '',
-                    choreStatus: '' 
+                    choreStatus: '',
+                    userErrMsg: ''
                 });
             })
             .catch(err => console.log(err));
         }
+    }
+
+    handleAddChore(event, choreName, choreStatus, choreAssigneeUsername, choreDateComplete, choreFreqId, choreCategoryId, choreDifficulty, choreNotes) {
+        event.preventDefault();
+        let assigneeId = null;
+        let doesUserExist = false;
+        let errMsg;
+
+        if(!choreAssigneeUsername) {
+            choreAssigneeUsername = null;
+        }
+        if(!choreFreqId) {
+            choreFreqId = null;
+        }
+        if(!choreDifficulty) {
+            choreDifficulty = null;
+        } 
+        if(!choreDateComplete) {
+            choreDateComplete = null;
+        }
+
+        if(choreAssigneeUsername) {
+            let isEmailAddressValid = validator.validate(choreAssigneeUsername);
+            if(isEmailAddressValid) {
+                for(let x = 0; x < this.props.allUsers.length; x++) {
+                    if(this.props.allUsers[x].username.toLowerCase() === choreAssigneeUsername.toLowerCase()) {
+                        assigneeId = this.props.allUsers[x].id;
+                        doesUserExist = true;
+                        break;
+                    }
+                }
+                if(!doesUserExist) {
+                    errMsg = 'User Does Not Exist';
+                } 
+            } else {
+                errMsg = 'Invalid Username Format';
+            }
+            
+            if(doesUserExist && isEmailAddressValid) {
+                this.addChore(choreName, choreStatus, choreCategoryId, choreDateComplete, choreFreqId, 
+                    assigneeId, choreDifficulty, choreNotes); ;
+            } else {
+                this.setState({ userErrMsg: errMsg });
+            }
+        } else {
+            this.addChore(choreName, choreStatus, choreCategoryId, choreDateComplete, choreFreqId, 
+                assigneeId, choreDifficulty, choreNotes); 
+        }
+
+
+
     }
 
     handleCloseAddChoreModal(modal) {
@@ -180,6 +225,7 @@ class addChoreModal extends Component{
                             onChange={this.handleAddAssigneeUsername}
                         />
                     <label htmlFor='choreAssignee'>Assigned To (User's Email)</label>
+                    { this.state.userErrMsg ? <p className="invalidUsersError">{this.state.userErrMsg}</p> : <p></p> }
 
                     <div className="input-field frequency">
                         <select className='browser-default' value={this.state.choreFreqId} onChange={this.handleAddFrequency}>
@@ -225,7 +271,7 @@ class addChoreModal extends Component{
                             Cancel
                     </button>
 
-                    <button className={this.state.choreName && this.state.choreStatus && this.state.choreCategoryId 
+                    <button className={this.state.choreName && this.state.choreStatus && this.state.choreCategoryId && !this.state.userErrMsg
                     ? 'btn right' : 'btn right disabled'}
                         onClick={(e) => {this.handleAddChore(e, this.state.choreName, this.state.choreStatus, 
                         this.state.choreAssigneeUsername, this.state.choreDateComplete, this.state.choreFreqId, this.state.choreCategoryId,

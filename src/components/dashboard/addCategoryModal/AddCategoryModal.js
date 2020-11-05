@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import AddUserInput from './addUserInput/AddUserInput';
 import '../addCategoryModal/addCategoryModal.css';
 import M from "materialize-css";
-const validator = require("email-validator");
-const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class AddCategoryModal extends Component {
     state = {
@@ -36,64 +34,26 @@ class AddCategoryModal extends Component {
 
     handleSaveCategory = (event, users, categoryName) => {
         event.preventDefault();
-        let isEmailAddressValid; 
-        let tempInvalidUserArr = [];
-        let doesUserExist;
+        let userIdArr = [JSON.parse(localStorage.getItem('user')).userId];
 
         if(categoryName) {
-            let userIdArr = [JSON.parse(localStorage.getItem('user')).userId];
-            if(users.length > 0) {
-                //loop through users added to new Category and all Users in db, if they match add the user's Id to userIdArr
-                    for(let x = 0; x < users.length; x++) {
-                        //check that username is in email format
-                        doesUserExist = false;
-                        isEmailAddressValid = validator.validate(users[x]);
-                        if(isEmailAddressValid) {
-                            for(let y = 0; y < this.props.allUsers.length; y++) {
-                                if(users[x].toLowerCase() === this.props.allUsers[y].username.toLowerCase()) {
-                                    userIdArr.push(this.props.allUsers[y].id);
-                                    doesUserExist = true;
-                                    break;
-                                } 
-                            }
-
-                            if(!doesUserExist) {
-                                    tempInvalidUserArr.push({
-                                    index: x,
-                                    errMsg: 'User Does Not Exist'
-                                }); 
-                            }
-                        } else {
-                            tempInvalidUserArr.push({
-                                index: x,
-                                errMsg: 'Invalid Username Format'
-                            });
-                        }
-                    }
-                    
-                    //if there are no invalid email addresses or users that don't exist in DB, continue with adding category
-                    if(tempInvalidUserArr.length === 0) {
-                        // removes any duplicates in array
-                        userIdArr = [...new Set(userIdArr)];
-                        this.props.addNewCategory(categoryName, userIdArr);
-                        this.setState({ 
-                            categoryNameInput: '',
-                            addUserInputs: [],
-                            invalidUsers: []
-                        })
-                    //else, prevent adding category
-                    } else {
-                        this.setState({ invalidUsers: tempInvalidUserArr });
-                    }
-            } else {
+            let userArrays = this.props.validateUsernames(users, userIdArr, this.props.allUsers);
+            
+            //if there are no invalid email addresses or users that don't exist in DB, continue with adding category
+            if(userArrays.tempInvalidUserArr.length === 0) {
+                // removes any duplicates in array
+                userIdArr = [...new Set(userArrays.userIdArr)];
                 this.props.addNewCategory(categoryName, userIdArr);
                 this.setState({ 
                     categoryNameInput: '',
                     addUserInputs: [],
                     invalidUsers: []
                 })
+            //else, prevent adding category
+            } else {
+                this.setState({ invalidUsers: userArrays.tempInvalidUserArr });
             }
-        }
+        } 
     }
 
     handleCloseAddCategoryModal(modal) {

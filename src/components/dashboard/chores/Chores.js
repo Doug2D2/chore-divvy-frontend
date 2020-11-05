@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../chores/chores.css';
 import M from "materialize-css";
+const validator = require("email-validator");
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
 class Chores extends Component {
@@ -13,7 +14,8 @@ class Chores extends Component {
         choreDifficulty: '',
         choreFreqId: '',
         choreNotes: '',
-        choreStatus: ''
+        choreStatus: '',
+        userErrMsg: ''
     }
     user = JSON.parse(localStorage.getItem('user'));
     usersCategories = [];
@@ -87,55 +89,73 @@ class Chores extends Component {
     }
 
     handleAssigneeChange = (event) => {
-        this.setState({ choreAssigneeUsername: event.target.value });
+        this.setState({ 
+            choreAssigneeUsername: event.target.value,
+            userErrMsg: ''
+         });
     }
 
     handleSaveEditChore(event, choreId, choreName, choreStatus, choreFreqId, choreCatId, choreAssigneeUsername, choreDifficulty, choreNotes) {
         event.preventDefault();
         let assigneeId = null;
+        let doesUserExist = false;
+        let errMsg;
         
-        if(choreName && choreStatus && choreCatId) {
-            if(choreAssigneeUsername) {
-                fetch(`${baseUrl}/get-users`)
-                .then(res => res.json())
-                .then(users => {
-                    
-                    for(let x = 0; x < users.length; x++) {
-                        if(users[x].username === choreAssigneeUsername) {
-                            assigneeId = users[x].id;
-                            break;
-                        }
+        if(choreAssigneeUsername) {
+            let isEmailAddressValid = validator.validate(choreAssigneeUsername);
+            if(isEmailAddressValid) {
+                for(let x = 0; x < this.props.allUsers.length; x++) {
+                    if(this.props.allUsers[x].username.toLowerCase() === choreAssigneeUsername.toLowerCase()) {
+                        assigneeId = this.props.allUsers[x].id;
+                        doesUserExist = true;
+                        break;
                     }
-    
-                    fetch(`${baseUrl}/update-chore/${choreId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            choreName: choreName,
-                            status: choreStatus,
-                            frequencyId: choreFreqId,
-                            categoryId: choreCatId,
-                            assigneeId: assigneeId,
-                            difficulty: choreDifficulty,
-                            notes: choreNotes
-                        })
-                    })
-                    .then(res => {
-                        this.props.getChores();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-    
-                })
-                .catch(err => {
-                    console.log(err);
-                })
+                }
+                if(!doesUserExist) {
+                    errMsg = 'User Does Not Exist';
+                } 
+            } else {
+                errMsg = 'Invalid Username Format';
             }
+            
+            if(doesUserExist && isEmailAddressValid) {
+                this.updateChore(choreId, choreName, choreStatus, choreFreqId, choreCatId, 
+                    assigneeId, choreDifficulty, choreNotes);
+            } else {
+                this.setState({ userErrMsg: errMsg });
+            }
+        } else {
+            this.updateChore(choreId, choreName, choreStatus, choreFreqId, choreCatId, 
+                assigneeId, choreDifficulty, choreNotes);  
         }
 
+    }
+
+    updateChore(choreId, choreName, choreStatus, choreFreqId, choreCatId, assigneeId, choreDifficulty, choreNotes) {
+        if(choreName && choreStatus && choreCatId) {
+            fetch(`${baseUrl}/update-chore/${choreId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    choreName: choreName,
+                    status: choreStatus,
+                    frequencyId: choreFreqId,
+                    categoryId: choreCatId,
+                    assigneeId: assigneeId,
+                    difficulty: choreDifficulty,
+                    notes: choreNotes
+                })
+            })
+            .then(res => {
+                this.props.getChores();
+                this.setState({ userErrMsg: '' });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        }
         this.props.handleCloseModal('.choreModal');
     }
     
@@ -153,8 +173,6 @@ class Chores extends Component {
 
         this.props.handleCloseModal('.choreModal');
     }
-
-
 
     getUsersCategories() {
         fetch(`${baseUrl}/get-categories-by-userId/${this.user.userId}`)
@@ -244,6 +262,7 @@ class Chores extends Component {
                             onChange={this.handleAssigneeChange}
                         />
                         <label htmlFor='choreAssignee'>Assigned To (User's Email)</label>
+                        { this.state.userErrMsg ? <p className='invalidUsersError'>{this.state.userErrMsg}</p> : <p></p> }
 
                         <div className="input-field frequency">
                             <select className='browser-default' value={this.state.choreFreqId} onChange={this.handleFrequencyChange}>
@@ -294,7 +313,7 @@ class Chores extends Component {
                                 Cancel
                         </button>
 
-                        <button className={!this.state.choreName ? "btn right disabled" : "btn right"} 
+                        <button className={this.state.choreName && this.state.choreStatus && this.state.choreCategoryId && !this.state.userErrMsg ? "btn right" : "btn right disabled"} 
                             onClick={(e) => this.handleSaveEditChore(e, this.currentChore.id, this.state.choreName, 
                             this.state.choreStatus, this.state.choreFreqId, this.state.choreCategoryId, 
                             this.state.choreAssigneeUsername,this.state.choreDifficulty, this.state.choreNotes)}>
