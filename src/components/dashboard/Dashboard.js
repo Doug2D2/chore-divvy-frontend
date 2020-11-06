@@ -16,7 +16,8 @@ class Dashboard extends Component {
         categoryName: '',
         users: [],
         editSaveBtnDisabled: true,
-        invalidUsers: []
+        invalidUsers: [],
+        addChoreCategoryId: JSON.parse(localStorage.getItem('categoryId'))
     }
     OGCategoryName = '';
     OGUsers = [];
@@ -122,6 +123,9 @@ class Dashboard extends Component {
             this.setState({ editSaveBtnDisabled: true });
             this.OGCategoryName = category.category_name;
             this.OGUsers = [category.user_id].sort();
+        }
+        if(modal === '.addChoreModal') {
+            this.setState({ addChoreCategoryId: JSON.parse(localStorage.getItem('categoryId')) });
         }
         let elem = document.querySelector(modal);
         let options = {
@@ -307,7 +311,8 @@ class Dashboard extends Component {
                 handleOpenModal={this.handleOpenModal} handleCloseModal={this.handleCloseModal} allUsers={this.allUsers}/>
                 <AddCategoryModal addNewCategory={this.addNewCategory} handleCloseModal={this.handleCloseModal} 
                 validateUsernames={this.validateUsernames} allUsers={this.allUsers}/>
-                <AddChoreModal getChores={this.getChores} handleCloseModal={this.handleCloseModal} allUsers={this.allUsers}/>
+                <AddChoreModal getChores={this.getChores} handleCloseModal={this.handleCloseModal} allUsers={this.allUsers}
+                addChoreCategoryId={this.state.addChoreCategoryId} handleInputChange={this.handleInputChange}/>
 
                 <div id="modal1" className="modal editModal modal-fixed-footer">
                     <div className="modal-content">

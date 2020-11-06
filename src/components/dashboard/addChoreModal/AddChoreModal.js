@@ -6,7 +6,6 @@ const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 class addChoreModal extends Component{
     state = {
         choreAssigneeUsername: '',
-        choreCategoryId: '',
         choreName: '',
         choreDateComplete: '',
         choreDifficulty: '',
@@ -92,7 +91,6 @@ class addChoreModal extends Component{
                 this.props.getChores();
                 this.setState({
                     choreAssigneeUsername: '',
-                    choreCategoryId: '',
                     choreName: '',
                     choreDateComplete: '',
                     choreDifficulty: '',
@@ -160,7 +158,6 @@ class addChoreModal extends Component{
     handleCloseAddChoreModal(modal) {
         this.setState({
             choreAssigneeUsername: '',
-            choreCategoryId: '',
             choreName: '',
             choreDateComplete: '',
             choreDifficulty: '',
@@ -224,7 +221,7 @@ class addChoreModal extends Component{
                     </div>
 
                     <div className="input-field category">
-                        <select className='browser-default' value={this.state.choreCategoryId} onChange={this.handleInputChange} name='choreCategoryId'>
+                        <select className='browser-default' value={this.props.addChoreCategoryId} onChange={this.props.handleInputChange} name='addChoreCategoryId'>
                             <option value="" disabled>Choose your option</option>
                             {this.usersCategories.map(category => (
                                 <option key={category.id} value={category.id}>{category.category_name}</option>
@@ -255,10 +252,10 @@ class addChoreModal extends Component{
                             Cancel
                     </button>
 
-                    <button className={this.state.choreName && this.state.choreStatus && this.state.choreCategoryId && !this.state.userErrMsg
+                    <button className={this.state.choreName && this.state.choreStatus && this.props.addChoreCategoryId && !this.state.userErrMsg
                     ? 'btn right' : 'btn right disabled'}
                         onClick={(e) => {this.handleAddChore(e, this.state.choreName, this.state.choreStatus, 
-                        this.state.choreAssigneeUsername, this.state.choreDateComplete, this.state.choreFreqId, this.state.choreCategoryId,
+                        this.state.choreAssigneeUsername, this.state.choreDateComplete, this.state.choreFreqId, this.props.addChoreCategoryId,
                         this.state.choreDifficulty, this.state.choreNotes)}}>
                         Save
                     </button>
