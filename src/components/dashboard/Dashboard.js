@@ -17,7 +17,8 @@ class Dashboard extends Component {
         users: [],
         editSaveBtnDisabled: true,
         invalidUsers: [],
-        addChoreCategoryId: JSON.parse(localStorage.getItem('categoryId'))
+        addChoreCategoryId: JSON.parse(localStorage.getItem('categoryId')),
+        errorMessage: {}
     }
     OGCategoryName = '';
     OGUsers = [];
@@ -40,7 +41,12 @@ class Dashboard extends Component {
                 this.setState({ chores: data });
             })
             .catch(err => {
-                console.log(err);
+                this.setState({ 
+                    errorMessage: {
+                        error: 'get-chores',
+                        message: 'Unable to retrieve chores'
+                    }
+                })
             });
         }
     }
@@ -59,7 +65,12 @@ class Dashboard extends Component {
                 this.setState({ categories: data })
             })
             .catch(err => {
-                console.log(err);
+                this.setState({ 
+                    errorMessage: {
+                        error: 'get-categories',
+                        message: 'Unable to retrieve categories'
+                    }
+                })
             })
         }
     }
@@ -77,7 +88,14 @@ class Dashboard extends Component {
                 })
             }
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            this.setState({ 
+                errorMessage: {
+                    error: 'get-users',
+                    message: 'Unable to retrieve users'
+                }
+            })
+        });
     }
 
     handleInputChange = (event) => {
@@ -162,7 +180,12 @@ class Dashboard extends Component {
             this.getCategories();
         })
         .catch(err => {
-            console.log(err);
+            this.setState({ 
+                errorMessage: {
+                    error: 'add-category',
+                    message: 'Unable to add category'
+                }
+            })
         })
     }
 
@@ -177,7 +200,12 @@ class Dashboard extends Component {
                 this.getCategories();
             })
             .catch(err => {
-                console.log(err);
+                this.setState({ 
+                    errorMessage: {
+                        error: 'delete-category',
+                        message: 'Unable to delete category'
+                    }
+                })
             });
         }
     }
