@@ -16,7 +16,8 @@ class Dashboard extends Component {
         categoryName: '',
         users: [],
         editSaveBtnDisabled: true,
-        invalidUsers: []
+        invalidUsers: [],
+        addChoreCategoryId: JSON.parse(localStorage.getItem('categoryId'))
     }
     OGCategoryName = '';
     OGUsers = [];
@@ -79,6 +80,10 @@ class Dashboard extends Component {
         .catch(err => console.log(err));
     }
 
+    handleInputChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value})
+    }
+
     handleCategoryClick = (event) => {
         event.preventDefault();
         localStorage.setItem('categoryId', event.target.id);
@@ -118,6 +123,9 @@ class Dashboard extends Component {
             this.setState({ editSaveBtnDisabled: true });
             this.OGCategoryName = category.category_name;
             this.OGUsers = [category.user_id].sort();
+        }
+        if(modal === '.addChoreModal') {
+            this.setState({ addChoreCategoryId: JSON.parse(localStorage.getItem('categoryId')) });
         }
         let elem = document.querySelector(modal);
         let options = {
@@ -172,10 +180,6 @@ class Dashboard extends Component {
                 console.log(err);
             });
         }
-    }
-
-    handleCategoryNameInputEdit = (event) => {
-        this.setState({ categoryName: event.target.value, editSaveBtnDisabled: false });
     }
 
     handleCategoryUsernameInputEdit = (event, usernameIndex) => {
@@ -307,7 +311,8 @@ class Dashboard extends Component {
                 handleOpenModal={this.handleOpenModal} handleCloseModal={this.handleCloseModal} allUsers={this.allUsers}/>
                 <AddCategoryModal addNewCategory={this.addNewCategory} handleCloseModal={this.handleCloseModal} 
                 validateUsernames={this.validateUsernames} allUsers={this.allUsers}/>
-                <AddChoreModal getChores={this.getChores} handleCloseModal={this.handleCloseModal} allUsers={this.allUsers}/>
+                <AddChoreModal getChores={this.getChores} handleCloseModal={this.handleCloseModal} allUsers={this.allUsers}
+                addChoreCategoryId={this.state.addChoreCategoryId} handleInputChange={this.handleInputChange}/>
 
                 <div id="modal1" className="modal editModal modal-fixed-footer">
                     <div className="modal-content">
@@ -321,7 +326,7 @@ class Dashboard extends Component {
                             <div className='col s8 offset-s2'>
                                 <input type="text" name="categoryName" id="categoryName" 
                                 value={this.state.categoryName}
-                                onChange={this.handleCategoryNameInputEdit}
+                                onChange={this.handleInputChange}
                                 required/>
                                 <label htmlFor='categoryName'>Category Name</label>
                             </div>

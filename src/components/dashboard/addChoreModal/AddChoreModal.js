@@ -6,7 +6,6 @@ const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 class addChoreModal extends Component{
     state = {
         choreAssigneeUsername: '',
-        choreCategoryId: '',
         choreName: '',
         choreDateComplete: '',
         choreDifficulty: '',
@@ -24,8 +23,8 @@ class addChoreModal extends Component{
         this.getUsersCategories();
     }
 
-    handleAddChoreName = event => {
-        this.setState({ choreName: event.target.value });
+    handleInputChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value});
     }
 
     handleAddStatus = event => {
@@ -44,22 +43,6 @@ class addChoreModal extends Component{
             choreAssigneeUsername: event.target.value,
             userErrMsg: ''
          });
-    }
-
-    handleAddFrequency = event => {
-        this.setState({ choreFreqId: event.target.value });
-    }
-
-    handleAddCategory = event => {
-        this.setState({ choreCategoryId: event.target.value });
-    }
-
-    handleAddDifficulty = event => {
-        this.setState({ choreDifficulty: event.target.value });
-    }
-
-    handleAddNote = event => {
-        this.setState({ choreNotes: event.target.value });
     }
 
     getFrequencies() {
@@ -108,7 +91,6 @@ class addChoreModal extends Component{
                 this.props.getChores();
                 this.setState({
                     choreAssigneeUsername: '',
-                    choreCategoryId: '',
                     choreName: '',
                     choreDateComplete: '',
                     choreDifficulty: '',
@@ -176,7 +158,6 @@ class addChoreModal extends Component{
     handleCloseAddChoreModal(modal) {
         this.setState({
             choreAssigneeUsername: '',
-            choreCategoryId: '',
             choreName: '',
             choreDateComplete: '',
             choreDifficulty: '',
@@ -203,7 +184,7 @@ class addChoreModal extends Component{
                     <div className='row addChoreForm'>
                     <input placeholder='Chore Name' type="text" name="choreName" id="choreName" 
                             value={this.state.choreName}
-                            onChange={this.handleAddChoreName}
+                            onChange={this.handleInputChange}
                             required/>
                         <label htmlFor='choreName'>Chore Name (Required)</label>
                     </div>
@@ -228,7 +209,7 @@ class addChoreModal extends Component{
                     { this.state.userErrMsg ? <p className="invalidUsersError">{this.state.userErrMsg}</p> : <p></p> }
 
                     <div className="input-field frequency">
-                        <select className='browser-default' value={this.state.choreFreqId} onChange={this.handleAddFrequency}>
+                        <select className='browser-default' value={this.state.choreFreqId} onChange={this.handleInputChange} name='choreFreqId'>
                             <option value="" disabled>Choose your option</option>
                             {this.frequencies.map(freq => (
                                 <option key={freq.id} value={freq.id}>{freq.frequency_name}</option>
@@ -240,7 +221,7 @@ class addChoreModal extends Component{
                     </div>
 
                     <div className="input-field category">
-                        <select className='browser-default' value={this.state.choreCategoryId} onChange={this.handleAddCategory}>
+                        <select className='browser-default' value={this.props.addChoreCategoryId} onChange={this.props.handleInputChange} name='addChoreCategoryId'>
                             <option value="" disabled>Choose your option</option>
                             {this.usersCategories.map(category => (
                                 <option key={category.id} value={category.id}>{category.category_name}</option>
@@ -252,7 +233,7 @@ class addChoreModal extends Component{
                     </div>
 
                     <div className="input-field difficulty">
-                        <select className='browser-default' value={this.state.choreDifficulty} onChange={this.handleAddDifficulty}>
+                        <select className='browser-default' value={this.state.choreDifficulty} onChange={this.handleInputChange} name='choreDifficulty'>
                             <option value="" disabled>Choose your option</option>
                             <option value="Easy">Easy</option>
                             <option value="Medium">Medium</option>
@@ -263,7 +244,7 @@ class addChoreModal extends Component{
                         </div>
                     </div>
 
-                    <textarea value={this.state.choreNotes} onChange={this.handleAddNote}></textarea>
+                    <textarea value={this.state.choreNotes} onChange={this.handleInputChange} name='choreNotes'></textarea>
                     <label>Notes</label>
 
                     <button className="btn left red" 
@@ -271,10 +252,10 @@ class addChoreModal extends Component{
                             Cancel
                     </button>
 
-                    <button className={this.state.choreName && this.state.choreStatus && this.state.choreCategoryId && !this.state.userErrMsg
+                    <button className={this.state.choreName && this.state.choreStatus && this.props.addChoreCategoryId && !this.state.userErrMsg
                     ? 'btn right' : 'btn right disabled'}
                         onClick={(e) => {this.handleAddChore(e, this.state.choreName, this.state.choreStatus, 
-                        this.state.choreAssigneeUsername, this.state.choreDateComplete, this.state.choreFreqId, this.state.choreCategoryId,
+                        this.state.choreAssigneeUsername, this.state.choreDateComplete, this.state.choreFreqId, this.props.addChoreCategoryId,
                         this.state.choreDifficulty, this.state.choreNotes)}}>
                         Save
                     </button>

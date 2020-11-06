@@ -17,6 +17,10 @@ class LoginForm extends Component {
         }
     }
 
+    handleInputChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value})
+    }
+
     handleSubmitLoginForm(e, username, password) {
         e.preventDefault();
 
@@ -51,14 +55,6 @@ class LoginForm extends Component {
         });
     }
 
-    handleUsernameChange = (event) => {
-        this.setState({ usernameInput: event.target.value });
-    }
-
-    handlePasswordChange = (event) => {
-        this.setState({ passwordInput: event.target.value });
-    }
-
     render() {
         if(this.props.isLoggedInState) {
             return <Redirect push to='/dashboard' />
@@ -77,14 +73,14 @@ class LoginForm extends Component {
                             <p className='loginErrorMsg'>{this.state.loginErrorMsg}</p>
                         </span>
                         <span>
-                            <input placeholder='Email' id='username' className='inputStyle' 
+                            <input placeholder='Email' id='username' className='inputStyle'  name='usernameInput'
                             value={this.state.usernameInput}
-                            onChange={this.handleUsernameChange} 
+                            onChange={this.handleInputChange} 
                             />
                             <label htmlFor='username'>Email</label>
-                            <input placeholder='Password' type='password' id='password' className='inputStyle' 
+                            <input placeholder='Password' type='password' id='password' className='inputStyle' name='passwordInput'
                             value={this.state.passwordInput}
-                            onChange={this.handlePasswordChange}
+                            onChange={this.handleInputChange}
                             />
                             <label htmlFor='password'>Password</label>
                         </span>
