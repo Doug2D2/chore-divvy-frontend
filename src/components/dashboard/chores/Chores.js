@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../chores/chores.css';
 import M from "materialize-css";
+import swal from 'sweetalert';
 const validator = require("email-validator");
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
@@ -137,7 +138,7 @@ class Chores extends Component {
                 this.setState({ userErrMsg: '' });
             })
             .catch(err => {
-                console.log(err);
+                swal({ icon: 'error', text: 'Unable to update chore'});
             });
         }
         this.props.handleCloseModal('.choreModal');
@@ -152,7 +153,7 @@ class Chores extends Component {
             this.props.getChores();
         })
         .catch(err => {
-            console.log(err);
+            swal({ icon: 'error', text: 'Unable to delete chore'});
         });
 
         this.props.handleCloseModal('.choreModal');

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import M from "materialize-css";
+import swal from 'sweetalert';
 const validator = require("email-validator");
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
@@ -100,7 +101,9 @@ class addChoreModal extends Component{
                     userErrMsg: ''
                 });
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                swal({ icon: 'error', text: 'Unable to add chore'});
+            });
         }
     }
 
