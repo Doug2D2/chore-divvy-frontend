@@ -6,6 +6,7 @@ import AddChoreModal from './addChoreModal/AddChoreModal';
 import M from "materialize-css";
 import { Redirect } from 'react-router-dom';
 import '../dashboard/dashboard.css';
+import swal from 'sweetalert';
 const validator = require("email-validator");
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
@@ -17,8 +18,7 @@ class Dashboard extends Component {
         users: [],
         editSaveBtnDisabled: true,
         invalidUsers: [],
-        addChoreCategoryId: JSON.parse(localStorage.getItem('categoryId')),
-        errorMessage: {}
+        addChoreCategoryId: JSON.parse(localStorage.getItem('categoryId'))
     }
     OGCategoryName = '';
     OGUsers = [];
@@ -41,12 +41,7 @@ class Dashboard extends Component {
                 this.setState({ chores: data });
             })
             .catch(err => {
-                this.setState({ 
-                    errorMessage: {
-                        error: 'get-chores',
-                        message: 'Unable to retrieve chores'
-                    }
-                })
+                swal({ icon: 'error', text: 'Unable to retrieve chores'});
             });
         }
     }
@@ -65,12 +60,7 @@ class Dashboard extends Component {
                 this.setState({ categories: data })
             })
             .catch(err => {
-                this.setState({ 
-                    errorMessage: {
-                        error: 'get-categories',
-                        message: 'Unable to retrieve categories'
-                    }
-                })
+                swal({ icon: 'error', text: 'Unable to retrieve categories'});
             })
         }
     }
@@ -89,12 +79,7 @@ class Dashboard extends Component {
             }
         })
         .catch(err => {
-            this.setState({ 
-                errorMessage: {
-                    error: 'get-users',
-                    message: 'Unable to retrieve users'
-                }
-            })
+            console.log(err);
         });
     }
 
@@ -180,12 +165,7 @@ class Dashboard extends Component {
             this.getCategories();
         })
         .catch(err => {
-            this.setState({ 
-                errorMessage: {
-                    error: 'add-category',
-                    message: 'Unable to add category'
-                }
-            })
+            swal({ icon: 'error', text: 'Unable to add category'});
         })
     }
 
@@ -200,12 +180,7 @@ class Dashboard extends Component {
                 this.getCategories();
             })
             .catch(err => {
-                this.setState({ 
-                    errorMessage: {
-                        error: 'delete-category',
-                        message: 'Unable to delete category'
-                    }
-                })
+                swal({ icon: 'error', text: 'Unable to delete category'});
             });
         }
     }
@@ -320,7 +295,7 @@ class Dashboard extends Component {
             });
         })
         .catch(err => {
-            console.log(err);
+            swal({ icon: 'error', text: 'Unable to update category'});
         })
     }
 
