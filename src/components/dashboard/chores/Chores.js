@@ -50,7 +50,8 @@ class Chores extends Component {
             choreFreqId: chore.frequency_id,
             choreNotes: chore.notes,
             choreStatus: chore.status,
-            detailsBool: !this.state.detailsBool
+            detailsBool: !this.state.detailsBool,
+            userErrMsg: ''
         });
         
         M.Modal.init(elem, options);
@@ -166,7 +167,7 @@ class Chores extends Component {
             this.usersCategories = currentUsersCategories;
         })
         .catch(err => {
-            console.log(err);
+            this.setState({ userErrMsg: 'Unable to retrieve users' });
         })
     }
 

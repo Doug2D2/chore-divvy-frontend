@@ -46,7 +46,6 @@ class LoginForm extends Component {
             this.props.setIsLoggedIn(true);
         })
         .catch(err => {
-            console.log(err);
             this.setState({
                 usernameInput: '',
                 passwordInput: '',
