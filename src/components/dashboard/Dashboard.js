@@ -6,6 +6,7 @@ import AddChoreModal from './addChoreModal/AddChoreModal';
 import M from "materialize-css";
 import { Redirect } from 'react-router-dom';
 import '../dashboard/dashboard.css';
+import swal from 'sweetalert';
 const validator = require("email-validator");
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
 
@@ -40,7 +41,7 @@ class Dashboard extends Component {
                 this.setState({ chores: data });
             })
             .catch(err => {
-                console.log(err);
+                swal({ icon: 'error', text: 'Unable to retrieve chores'});
             });
         }
     }
@@ -59,7 +60,7 @@ class Dashboard extends Component {
                 this.setState({ categories: data })
             })
             .catch(err => {
-                console.log(err);
+                swal({ icon: 'error', text: 'Unable to retrieve categories'});
             })
         }
     }
@@ -77,7 +78,9 @@ class Dashboard extends Component {
                 })
             }
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            console.log(err);
+        });
     }
 
     handleInputChange = (event) => {
@@ -162,7 +165,7 @@ class Dashboard extends Component {
             this.getCategories();
         })
         .catch(err => {
-            console.log(err);
+            swal({ icon: 'error', text: 'Unable to add category'});
         })
     }
 
@@ -177,7 +180,7 @@ class Dashboard extends Component {
                 this.getCategories();
             })
             .catch(err => {
-                console.log(err);
+                swal({ icon: 'error', text: 'Unable to delete category'});
             });
         }
     }
@@ -292,7 +295,7 @@ class Dashboard extends Component {
             });
         })
         .catch(err => {
-            console.log(err);
+            swal({ icon: 'error', text: 'Unable to update category'});
         })
     }
 
