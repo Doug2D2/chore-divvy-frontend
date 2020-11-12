@@ -86,14 +86,14 @@ class LoginForm extends Component {
 
                         <p className='forgotPW'><Link to='/forgot-password'>Forgot Password?</Link></p>
 
-                        <div className='submitBtn'>
-                            <button type='submit' className='btn btn-large indigo' disabled={!enabled}
+                        <div className='submitBtnDiv'>
+                            <button type='submit' className='btn btn-large indigo submitBtn' disabled={!enabled}
                                 onClick={(e) => this.handleSubmitLoginForm(e, this.state.usernameInput, this.state.passwordInput)}>
                                 Submit
                             </button>
                         </div>
 
-                            <p>Not registered? Sign up
+                            <p className='signUpHere'>Not registered? Sign up
                                 <Link to='/sign-up-form'>
                                     &nbsp;here
                                 </Link>

@@ -1,23 +1,42 @@
-.submitBtn {
+.submitBtnDiv {
     margin-top: 10px;
+}
+
+.submitBtn {
+    border-radius: 30px;
+    font-size: 20px;
 }
 
 h2 {
     margin-top: 0;
     color: #002984;
-    font-family: 'Coiny', cursive;
+    font-family: 'Righteous', cursive;
 }
 
 .loginErrorMsg {
-    color: red;
+    color: #B40505;
+    font-size: 20px;
 }
 
 .forgotPW {
     text-align: left;
+    font-size: 20px;
+}
+
+.signUpHere {
+    font-size: 20px;
 }
 
 .loginContainer {
     margin-top: 90px;
+}
+
+a {
+    color: #002984;
+}
+
+a:hover {
+    color: #01A9DA;
 }
 
 
