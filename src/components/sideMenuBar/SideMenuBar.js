@@ -8,7 +8,7 @@ function SideMenuBar(props) {
                 <ul>
                     {props.categories.map(category => (
                         <li key={category.id} id={category.id} 
-                        className={JSON.parse(localStorage.getItem('categoryId')) === category.id ? "categoryListClicked left-align" : "categoryList left-align"}
+                        className={localStorage.getItem('categoryId') === category.id.toString() ? "categoryListClicked left-align" : "categoryList left-align"}
                         onClick={(e) => {props.handleCategoryClick(e)}}>
                                 {category.category_name}
                             <span >
@@ -16,7 +16,7 @@ function SideMenuBar(props) {
                                     onClick={(e) => {props.handleDeleteCategory(e, category.id)}}>
                                         close
                                     </i>
-                                    <i className="material-icons right editCategoryIcon"
+                                    <i className="material-icons right editCategoryIcon" id='edit'
                                     onClick={(e) => {props.handleOpenModal(e, '.editModal', category)}}>
                                         edit
                                     </i>

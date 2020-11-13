@@ -18,7 +18,7 @@ class Dashboard extends Component {
         users: [],
         editSaveBtnDisabled: true,
         invalidUsers: [],
-        addChoreCategoryId: JSON.parse(localStorage.getItem('categoryId'))
+        addChoreCategoryId: localStorage.getItem('categoryId')
     }
     OGCategoryName = '';
     OGUsers = [];
@@ -89,12 +89,16 @@ class Dashboard extends Component {
 
     handleCategoryClick = (event) => {
         event.preventDefault();
-        localStorage.setItem('categoryId', event.target.id);
-        this.categoryId = localStorage.getItem('categoryId');
-        this.getChores();
+        let id = event.target.id;
+        if(id && this.state.categories.map(category => (category.id).toString()).includes(id)) {
+            localStorage.setItem('categoryId', event.target.id);
+            this.categoryId = localStorage.getItem('categoryId');
+            this.getChores();
+        }
     }
 
     updateUsersIdToEmail(category){
+        // localStorage.setItem('categoryId', category.id);
         localStorage.setItem('editCategoryId', category.id);
         let usernameArr = [];
         let currUserId = this.user.userId;
@@ -128,7 +132,7 @@ class Dashboard extends Component {
             this.OGUsers = [category.user_id].sort();
         }
         if(modal === '.addChoreModal') {
-            this.setState({ addChoreCategoryId: JSON.parse(localStorage.getItem('categoryId')) });
+            this.setState({ addChoreCategoryId: localStorage.getItem('categoryId') });
         }
         let elem = document.querySelector(modal);
         let options = {
@@ -273,7 +277,7 @@ class Dashboard extends Component {
     }
 
     updateCategory(categoryName, userIdArr) {
-        let editCategoryId = JSON.parse(localStorage.getItem('editCategoryId'));
+        let editCategoryId = localStorage.getItem('editCategoryId');
         fetch(`${baseUrl}/update-category/${editCategoryId}`, {
             method: 'PUT',
             headers: {
