@@ -1,7 +1,9 @@
 .choreList {
     margin-top: 30px;
     border-radius: 8px;
-    border: 2px solid rgb(248, 245, 245);
+    /* border: 2px solid rgb(248, 245, 245); */
+    background-color: white;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 6px 0 rgba(0, 0, 0, 0.19);
 }
 
 .deleteChoreIcon {
@@ -13,10 +15,10 @@
 }
 
 .choreNameInvalid {
-    border-bottom: 1px solid red !important;
-    box-shadow: 0 1px 0 0 red !important;
+    border-bottom: 1px solid #B40505 !important;
+    box-shadow: 0 1px 0 0 #B40505 !important;
 }
 
 .choreNameLabelRequired {
-    color: red !important;
+    color: #B40505 !important;
 }

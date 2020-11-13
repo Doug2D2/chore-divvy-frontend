@@ -208,9 +208,9 @@ class Chores extends Component {
                             </li>
                         ))}
                         <button 
-                            className='btn ' 
+                            className='btn addBtn' 
                             onClick={(e) => {this.props.handleOpenModal(e, '.addChoreModal')}}>
-                                <i className="material-icons">add</i>
+                                <i className="material-icons large">add</i>
                         </button>
                     </ul>
                 </div>

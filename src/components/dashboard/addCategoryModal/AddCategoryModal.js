@@ -49,6 +49,7 @@ class AddCategoryModal extends Component {
                     addUserInputs: [],
                     invalidUsers: []
                 })
+                this.handleCloseAddCategoryModal('.addModal');
             //else, prevent adding category
             } else {
                 this.setState({ invalidUsers: userArrays.tempInvalidUserArr });

@@ -4,9 +4,11 @@ import '../sideMenuBar/SideMenuBar.css';
 function SideMenuBar(props) {
     return(
         <div className="col s3 sideMenuBar">
+            <h4 className='categoryHeader'>Categories</h4>
                 <ul>
                     {props.categories.map(category => (
-                        <li key={category.id} id={category.id} className="categoryList left-align"
+                        <li key={category.id} id={category.id} 
+                        className={JSON.parse(localStorage.getItem('categoryId')) === category.id ? "categoryListClicked left-align" : "categoryList left-align"}
                         onClick={(e) => {props.handleCategoryClick(e)}}>
                                 {category.category_name}
                             <span >
@@ -19,13 +21,12 @@ function SideMenuBar(props) {
                                         edit
                                     </i>
                             </span>
-                            <hr className='categoryHrTag'></hr>
                         </li>
                         
                     ))}
                 </ul>
             <button 
-                className='btn ' 
+                className='btn addBtn' 
                 onClick={(e) => {props.handleOpenModal(e, '.addModal')}}>
                     <i className="material-icons">add</i>
             </button>

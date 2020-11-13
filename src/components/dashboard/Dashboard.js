@@ -306,10 +306,8 @@ class Dashboard extends Component {
 
         return (
             <div className="row">
-                <SideMenuBar categories={this.state.categories}
-                handleCategoryClick={this.handleCategoryClick}
-                handleOpenModal={this.handleOpenModal}
-                handleDeleteCategory={this.handleDeleteCategory}/>
+                <SideMenuBar categories={this.state.categories} handleCategoryClick={this.handleCategoryClick} 
+                handleOpenModal={this.handleOpenModal} handleDeleteCategory={this.handleDeleteCategory}/>
                 <Chores chores={this.state.chores} getChores={this.getChores} users={this.state.users}
                 handleOpenModal={this.handleOpenModal} handleCloseModal={this.handleCloseModal} allUsers={this.allUsers}/>
                 <AddCategoryModal addNewCategory={this.addNewCategory} handleCloseModal={this.handleCloseModal} 

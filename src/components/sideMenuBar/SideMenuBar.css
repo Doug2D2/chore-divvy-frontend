@@ -1,20 +1,38 @@
 .sideMenuBar {
-    background-color: lightgray;
+    background-color: #FFFFFE;
     height: 100vh;
+    padding: 0 0 0 0 !important;
+}
+
+.categoryHeader {
+    color: #002984;
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-weight: 500;
 }
 
 .categoryList {
     font-size: 21px;
-    margin-left: 15px;
+    padding: 10px 0 10px 15px;
+    border-bottom: 3px solid #FBFAFA;
+    border-left: 5px solid #FBFAFA;
+}
+
+.categoryListClicked {
+    font-size: 21px;
+    padding: 10px 0 10px 15px;
+    border-bottom: 3px solid #002984;
+    border-left: 5px solid #002984;
 }
 
 .closeCategoryIcon {
     margin-right: 20px;
     margin-top: 7px;
+    color: #B40505;
 }
 
 .editCategoryIcon {
     margin-top: 7px;
+    color: #002984;
 }
 
 .categoryHrTag {

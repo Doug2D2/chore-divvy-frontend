@@ -1,0 +1,11 @@
+.addBtn {
+    background-color: #002984;
+    box-shadow: none;
+    height: 51px;
+    border-radius: 50px;
+    line-height: 51px;
+}
+
+.addBtn:hover {
+    background-color: #002a84b9;
+}
