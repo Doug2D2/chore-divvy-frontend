@@ -87,18 +87,22 @@ class Dashboard extends Component {
         this.setState({ [event.target.name]: event.target.value})
     }
 
+    updateCategoryOnEdit(id) {
+        localStorage.setItem('categoryId', id);
+        this.categoryId = localStorage.getItem('categoryId');
+        this.getChores();
+    }
+
     handleCategoryClick = (event) => {
         event.preventDefault();
         let id = event.target.id;
         if(id && this.state.categories.map(category => (category.id).toString()).includes(id)) {
-            localStorage.setItem('categoryId', event.target.id);
-            this.categoryId = localStorage.getItem('categoryId');
-            this.getChores();
+            this.updateCategoryOnEdit(id);
         }
     }
 
     updateUsersIdToEmail(category){
-        // localStorage.setItem('categoryId', category.id);
+        this.updateCategoryOnEdit(category.id);
         localStorage.setItem('editCategoryId', category.id);
         let usernameArr = [];
         let currUserId = this.user.userId;
