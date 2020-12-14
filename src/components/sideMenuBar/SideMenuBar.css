@@ -2,6 +2,11 @@
     background-color: #FFFFFE;
     height: 100vh;
     padding: 0 0 0 0 !important;
+    width: 25%;
+    margin-left: auto;
+    left: auto;
+    right: auto;
+    float: left;
 }
 
 .categoryHeader {
@@ -15,6 +20,7 @@
     padding: 10px 0 10px 15px;
     border-bottom: 3px solid #FBFAFA;
     border-left: 5px solid #FBFAFA;
+    cursor: pointer;
 }
 
 .categoryListClicked {
@@ -22,17 +28,24 @@
     padding: 10px 0 10px 15px;
     border-bottom: 3px solid #002984;
     border-left: 5px solid #002984;
+    cursor: pointer;
+}
+
+.categoryListClicked:hover, .categoryList:hover {
+    background-color: #002a8415;
 }
 
 .closeCategoryIcon {
     margin-right: 20px;
     margin-top: 7px;
     color: #B40505;
+    cursor: pointer;
 }
 
 .editCategoryIcon {
     margin-top: 7px;
     color: #002984;
+    cursor: pointer;
 }
 
 .categoryHrTag {

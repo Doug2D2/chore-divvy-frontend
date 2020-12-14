@@ -1,9 +1,14 @@
+.dashboardDiv {
+    display: inline;
+}
+
 .addBtn {
     background-color: #002984;
     box-shadow: none;
     height: 51px;
     border-radius: 50px;
     line-height: 51px;
+    margin-top: 15px;
 }
 
 .addBtn:hover {

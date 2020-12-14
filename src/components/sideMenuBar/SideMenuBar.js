@@ -3,7 +3,7 @@ import '../sideMenuBar/SideMenuBar.css';
 
 function SideMenuBar(props) {
     return(
-        <div className="col s3 sideMenuBar">
+        <div className="sideMenuBar">
             <h4 className='categoryHeader'>Categories</h4>
                 <ul>
                     {props.categories.map(category => (

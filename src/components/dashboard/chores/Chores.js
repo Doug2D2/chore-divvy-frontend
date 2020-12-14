@@ -200,12 +200,14 @@ class Chores extends Component {
     render() {
         return (
             <div>
-                <div className="choreList col s5 offset-s2">
-                    <ul>
+                <div className="choreList">
+                    <ul className='choreListUl'>
                         {this.props.chores.map(chore => (
-                            <li key={chore.id} onClick={(e) => this.handleChoreClick(e, '.choreModal', chore)}>
-                                <span>{chore.chore_name}</span>
-                            </li>
+                                <li key={chore.id} onClick={(e) => this.handleChoreClick(e, '.choreModal', chore)}
+                                className='choreItemLi'>
+                                    <span>{chore.chore_name}</span>
+                                </li>
+
                         ))}
                         <button 
                             className='btn addBtn' 
